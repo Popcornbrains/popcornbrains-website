@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<title>MILK RUN · 30 JAAR MILK INC.</title>
+<meta name="description" content="Vlieg door 30 jaar Milk Inc., van La Vache tot Medicine. Speel, win een golden VIP-ticket + Meet &amp; Greet voor Forever in de AFAS Dome, en stem op Medicine voor VRT Zomerhit.">
+<meta property="og:title" content="MILK RUN · 30 JAAR MILK INC.">
+<meta property="og:description" content="Vlieg door 30 jaar hits, van La Vache tot Medicine. U WIN?">
+<meta property="og:image" content="https://popcornbrains.com/milk-run/assets/img/og.png">
+<meta property="og:url" content="https://popcornbrains.com/milk-run/">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/img/favicon.ico">
+<link rel="apple-touch-icon" href="assets/img/favicon-180.png">
+<link rel="preload" href="assets/fonts/space-mono-700.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/space-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/styles.css?v=r14">
+</head>
+<body>
+
+<div id="app">
+  <div id="stage" aria-label="MILK RUN game">
+    <canvas id="game"></canvas>
+
+    <div id="hud" aria-hidden="true">
+      <div id="hud-left">
+        <div id="hud-year">1996</div>
+        <div id="hud-label">LA VACHE</div>
+      </div>
+      <div id="hud-right">
+        <div id="hud-score">00000</div>
+        <div id="hud-meter" title="Medicine-meter">■■■■■■■■■■</div>
+      </div>
+    </div>
+
+    <div id="banner" hidden></div>
+    <div id="strip" hidden></div>
+    <div id="tutor" hidden></div>
+    <button id="btn-mute" type="button">GELUID: AAN</button>
+
+    <!-- SPLASH -->
+    <section id="screen-splash" class="screen">
+      <img class="logo" src="assets/img/logo-wit.png" alt="Milk Inc.">
+      <h1 class="title">MILK RUN</h1>
+      <p class="eyebrow">1996 → 2026 · 30 JAAR IN ÉÉN VLUCHT</p>
+      <p id="challenge" class="challenge" hidden></p>
+      <button id="btn-start" class="btn btn-primary" type="button">PRESS START</button>
+      <p class="fine one-line">WIN HET GOLDEN TICKET · FOREVER · AFAS DOME</p>
+      <a class="fine-link" href="reglement.html">wedstrijdreglement &amp; privacy</a>
+    </section>
+
+    <!-- INSCHRIJFSTAP -->
+    <section id="screen-signup" class="screen" hidden>
+      <h2 class="subtitle">MAAK KANS OP HET GOLDEN TICKET</h2>
+      <div class="prize">
+        <p class="prize-big">GOLDEN VIP-TICKET<br>+ MEET &amp; GREET</p>
+        <p class="prize-sub">MILK INC. FOREVER · AFAS DOME · 23 OF 24 OKT</p>
+        <p class="prize-fine">ÉÉN GOLDEN TICKET · ÉÉN WINNAAR</p>
+      </div>
+      <form id="signup-form" novalidate>
+        <label class="field">
+          <span>JOUW E-MAILADRES</span>
+          <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="naam@voorbeeld.be" required>
+        </label>
+        <label class="field">
+          <span>SCHIFTINGSVRAAG: HOEVEEL KEER ZAL DEZE GAME GESPEELD ZIJN OP ZA 29/8 OM 20:00?</span>
+          <input type="text" name="guess" inputmode="numeric" pattern="\d*" placeholder="bv. 25000" required>
+        </label>
+        <label class="check">
+          <input type="checkbox" name="rules" required>
+          <span>Ik ben 16 jaar of ouder, doe mee en ga akkoord met het <a href="reglement.html">wedstrijdreglement</a>.</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" name="newsletter">
+          <span>Schrijf me ook in op de Milk Inc.-nieuwsbrief.</span>
+        </label>
+        <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+        <p class="form-error" role="alert"></p>
+        <button class="btn btn-primary" type="submit">DOE MEE &amp; SPEEL</button>
+      </form>
+      <button id="btn-skip" class="btn btn-ghost" type="button">NO, I'M ONLY HERE FOR THE GAME</button>
+    </section>
+
+    <!-- EINDE -->
+    <section id="screen-end" class="screen" hidden>
+      <h2 id="end-title" class="title">U WIN</h2>
+      <p id="end-sub" class="eyebrow">JE VLOOG 30 JAAR MILK INC. UIT</p>
+      <p id="end-challenge" class="challenge" hidden></p>
+      <p class="scoreline"><span id="end-score">00000</span></p>
+      <p id="end-best" class="fine">BESTE DEZE STEMRONDE: 00000</p>
+
+      <a id="cta-vote" class="btn btn-primary" href="#" target="_blank" rel="noopener">STEM NU OP MEDICINE</a>
+      <p id="cta-note" class="fine">VRT ZOMERHIT · ELKE WEEK OPNIEUW STEMMEN</p>
+
+      <div class="row">
+        <button id="btn-replay" class="btn btn-ghost" type="button">SPEEL OPNIEUW</button>
+        <button id="btn-share" class="btn btn-ghost" type="button">DEEL JE SCORE</button>
+      </div>
+
+      <div id="second-chance" hidden>
+        <p class="subtitle small">ALSNOG KANS MAKEN OP HET GOLDEN TICKET?</p>
+        <form id="signup-form-2" novalidate>
+          <label class="field">
+            <span>JOUW E-MAILADRES</span>
+            <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="naam@voorbeeld.be" required>
+          </label>
+          <label class="field">
+            <span>SCHIFTINGSVRAAG: HOEVEEL KEER GESPEELD OP ZA 29/8, 20:00?</span>
+            <input type="text" name="guess" inputmode="numeric" pattern="\d*" placeholder="bv. 25000" required>
+          </label>
+          <label class="check">
+            <input type="checkbox" name="rules" required>
+            <span>Ik ben 16 jaar of ouder, doe mee en ga akkoord met het <a href="reglement.html">wedstrijdreglement</a>.</span>
+          </label>
+          <label class="check">
+            <input type="checkbox" name="newsletter">
+            <span>Schrijf me ook in op de Milk Inc.-nieuwsbrief.</span>
+          </label>
+          <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
+          <p class="form-error" role="alert"></p>
+          <button class="btn btn-primary" type="submit">DOE MEE</button>
+        </form>
+        <p id="second-done" class="fine" hidden>JE DOET MEE. GOOD LUCK!</p>
+      </div>
+    </section>
+
+    <!-- SCORE-KAART VIEWER: in de Instagram/Facebook-webview is dit het
+         hoofdpad (navigator.share bestaat daar niet): bewaren + link kopiëren -->
+    <div id="share-view" hidden>
+      <p class="subtitle small">JOUW SCORE-KAART</p>
+      <img id="share-img" alt="MILK RUN score-kaart">
+      <p class="fine">HOU DE KAART INGEDRUKT OM ZE TE BEWAREN</p>
+      <div class="row">
+        <button id="btn-copylink" class="btn btn-ghost" type="button">KOPIEER DE LINK</button>
+        <button id="btn-shareclose" class="btn btn-ghost" type="button">SLUIT</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="crt" aria-hidden="true"></div>
+
+<script src="js/config.js?v=r4"></script>
+<script src="js/sprites.js?v=r4"></script>
+<script src="js/audio.js?v=r12"></script>
+<script src="js/eras.js?v=r12"></script>
+<script src="js/game.js?v=r11"></script>
+<script src="js/sharecard.js?v=r4"></script>
+<script src="js/signup.js?v=r4"></script>
+</body>
+</html>

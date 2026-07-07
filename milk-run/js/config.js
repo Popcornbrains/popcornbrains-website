@@ -6,9 +6,9 @@ window.MILKRUN_CONFIG = {
   // alsof de stemming loopt; ma 6/7 checken of dit de definitieve link blijft.
   VOTE_URL: 'https://www.vrt.be/interactie/stem/zomerhit/',
 
-  // Google Apps Script web-app URL (backend/RUNBOOK.md). Leeg = demo-modus:
-  // inschrijvingen blijven in localStorage en de UI werkt gewoon door.
-  ENDPOINT: '',
+  // Google Apps Script web-app URL (backend/RUNBOOK.md). Gekoppeld 7/7/2026:
+  // inschrijvingen gaan naar de private Sheet "MILK RUN - inschrijvingen".
+  ENDPOINT: 'https://script.google.com/macros/s/AKfycbyaKckaXBJ1leG_FAiK8v0XxB0w03-4h8wqKFaaquwR-EegiwJc0p3s9xssdY02Kv61og/exec',
 
   // Ticketfallback zolang VOTE_URL leeg is.
   TICKETS_URL: 'https://www.afas-dome.be/nl/evenement/milk-inc-4fceea50',

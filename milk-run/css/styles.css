@@ -1,0 +1,379 @@
+/* MILK RUN — monochroom Milk Inc.-brand in Gameboy-4-tinten.
+   ink-0 canvas, ink-1 panelen, twee grijzen als dither, wit als paper.
+   Type: Space Mono (publiek veilig); ProtoMono-swap = één @font-face. */
+
+/* Self-hosted (OFL): geen render-blocking Google Fonts-request, geen
+   third-party font-disclosure in de privacyverklaring nodig. */
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('../assets/fonts/space-mono-400.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Space Mono';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('../assets/fonts/space-mono-700.woff2') format('woff2');
+}
+
+:root {
+  --ink-0: #000000;
+  --ink-1: #232321;
+  --ink-2: #6e6e6a;
+  --ink-3: #b8b8b2;
+  --paper: #ffffff;
+  --mono: 'Space Mono', 'Courier New', monospace;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+html, body {
+  height: 100%;
+  background: var(--ink-0);
+  color: var(--paper);
+  font-family: var(--mono);
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior: none;
+}
+
+#app {
+  height: 100%;
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none; /* letterbox-zones op lange schermen sturen ook de koe */
+}
+
+/* ---- stage: 9:16, pixel-perfect opgeschaald ---- */
+#stage {
+  position: relative;
+  height: min(100vh, 177.78vw); /* fallback voor iOS < 15.4 (geen dvh) */
+  height: min(100dvh, 177.78vw);
+  aspect-ratio: 9 / 16;
+  max-width: 100vw;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+#game {
+  width: 100%;
+  height: 100%;
+  display: block;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  background: var(--ink-0);
+}
+
+/* ---- HUD ---- */
+#hud {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 12px;
+  pointer-events: none;
+  /* volledige donkere rand (fix 7/7): leesbaar ook waar een witte lichtbundel
+     of het finale-koepeltje achter het jaartal/label/score loopt */
+  text-shadow:
+    1px 1px 0 var(--ink-0), -1px 1px 0 var(--ink-0),
+    1px -1px 0 var(--ink-0), -1px -1px 0 var(--ink-0),
+    2px 2px 0 var(--ink-0);
+}
+#hud-year { font-size: 28px; font-weight: 700; letter-spacing: 2px; line-height: 1; }
+#hud-label {
+  font-size: 10px;
+  letter-spacing: 2px;
+  color: var(--ink-3);
+  margin-top: 2px;
+  max-width: 58vw;
+  line-height: 1.4;
+}
+#hud-right { text-align: right; }
+#hud-score { font-size: 16px; font-weight: 700; letter-spacing: 2px; }
+#hud-meter { font-size: 11px; letter-spacing: 1px; margin-top: 3px; color: var(--paper); }
+
+/* Midscherm-callout (THE RETURN, MEDICINE-momenten, TWEEDE KANS!). Fix 7/7:
+   eigen donkere plaat, zoals de strip. Stond wit-op-druk over de arena-bundels
+   en de witte finale-koepel ("het einde") -> nu leesbaar op elke backdrop. */
+#banner {
+  position: absolute;
+  top: 34%; left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 28px);
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  line-height: 1.3;
+  color: var(--paper);
+  background: rgba(0, 0, 0, 0.6);
+  padding: 7px 10px 7px 14px;
+  text-shadow: 2px 2px 0 var(--ink-1);
+  pointer-events: none;
+  animation: banner-in 300ms steps(3) both;
+}
+@keyframes banner-in {
+  from { opacity: 0; transform: translate(-50%, 6px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* vaste feiten-strip onderaan (fix 3/7, Storm-rapport bevinding 1):
+   chart-feiten weg uit het speelveld, altijd op dezelfde plek */
+/* Fix 7/7 (Lester): op drukke, lichte backdrops (arena/whisper: publiek in
+   #b8b8b2 + witte lichtbundels) viel de grijze striptekst weg. Nu een eigen
+   donkere plaat + witte tekst -> leesbaar op ELKE backdrop. Shrink-to-fit chip,
+   gecentreerd; lange tekst breekt netjes af binnen max-width. */
+#strip {
+  position: absolute;
+  bottom: 42px; left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 24px);
+  box-sizing: border-box;
+  text-align: center;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  line-height: 1.35;
+  color: var(--paper);
+  background: rgba(0, 0, 0, 0.62);
+  padding: 4px 8px 4px 11px;
+  text-shadow: 1px 1px 0 var(--ink-0);
+  pointer-events: none;
+}
+
+/* onboarding-cue (fix 3/7): één woordgroep, trage blink, geen tutorial-muur */
+#tutor {
+  position: absolute;
+  top: 60%; left: 0; right: 0;
+  text-align: center;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  color: var(--paper);
+  text-shadow: 3px 3px 0 var(--ink-1);
+  pointer-events: none;
+  animation: tutor-blink 1.1s steps(2) infinite;
+}
+@keyframes tutor-blink { 50% { opacity: 0.25; } }
+
+#btn-mute {
+  position: absolute;
+  bottom: 10px; right: 10px;
+  background: transparent;
+  color: var(--ink-3);
+  border: 1px solid var(--ink-2);
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 5px 8px;
+  cursor: pointer;
+}
+
+/* ---- schermen (CRT-overlays) ---- */
+.screen {
+  position: absolute;
+  inset: 0;
+  background: var(--ink-0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 18px;
+  text-align: center;
+  overflow-y: auto;
+  z-index: 2;
+}
+/* centreert korte content, maar knipt lange content niet af bovenaan */
+.screen > :first-child { margin-top: auto; }
+.screen > :last-child { margin-bottom: auto; }
+
+.logo { width: 84px; image-rendering: auto; }
+
+.title {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  line-height: 1;
+  text-shadow: 4px 4px 0 var(--ink-1);
+}
+.subtitle {
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  line-height: 1.5;
+  max-width: 34ch;
+}
+.subtitle.small { font-size: 12px; margin-top: 18px; }
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 3px;
+  color: var(--ink-3);
+}
+/* uitdaging (deep-link ?beat=) — branded chip */
+.challenge {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: var(--paper);
+  border: 1px solid var(--ink-2);
+  padding: 6px 12px;
+  max-width: 40ch;
+  line-height: 1.4;
+}
+/* prijsblok op de inschrijfstap (fix 3/7): de prijs is de conversiehefboom */
+.prize {
+  border: 2px solid var(--paper);
+  box-shadow: 4px 4px 0 var(--ink-2);
+  padding: 14px 18px;
+  width: 100%;
+  max-width: 320px;
+}
+.prize-big { font-size: 16px; font-weight: 700; letter-spacing: 2px; line-height: 1.5; }
+.prize-sub { font-size: 10px; letter-spacing: 2px; color: var(--ink-3); margin-top: 7px; }
+.prize-fine { font-size: 9px; letter-spacing: 1px; color: var(--ink-2); margin-top: 5px; }
+
+.fine { font-size: 10px; letter-spacing: 1px; line-height: 1.7; color: var(--ink-2); max-width: 40ch; }
+.fine.one-line { white-space: nowrap; max-width: none; }
+/* smalle schermen (iPhone SE): anders loopt de nowrap-prijsregel de padding voorbij */
+@media (max-width: 350px) { .fine.one-line { font-size: 9px; letter-spacing: 0.5px; } }
+/* lucht tussen het titelblok en de actie */
+#btn-start { margin-top: 12px; }
+.fine-link { font-size: 10px; color: var(--ink-2); }
+.fine-link:focus-visible { outline: 2px dashed var(--paper); outline-offset: 3px; }
+
+.scoreline {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  text-shadow: 3px 3px 0 var(--ink-1);
+}
+
+/* ---- knoppen ---- */
+.btn {
+  font-family: var(--mono);
+  font-weight: 700;
+  font-size: 14px;
+  letter-spacing: 2px;
+  padding: 14px 22px;
+  border: 2px solid var(--paper);
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+  min-height: 48px;
+}
+.btn-primary {
+  background: var(--paper);
+  color: var(--ink-0);
+  box-shadow: 4px 4px 0 var(--ink-2);
+}
+.btn-primary:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0 var(--ink-2); }
+.btn-ghost {
+  background: transparent;
+  color: var(--paper);
+  border-color: var(--ink-2);
+  font-size: 11px;
+  padding: 11px 14px;
+}
+.btn:focus-visible { outline: 3px dashed var(--paper); outline-offset: 3px; }
+.row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+
+/* ---- formulier ---- */
+form { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; }
+.field { display: flex; flex-direction: column; gap: 5px; text-align: left; }
+.field span { font-size: 9px; letter-spacing: 1px; color: var(--ink-3); line-height: 1.5; }
+.field input {
+  background: var(--ink-1);
+  border: 2px solid var(--ink-2);
+  color: var(--paper);
+  font-family: var(--mono);
+  font-size: 16px; /* voorkomt iOS-zoom */
+  padding: 11px 10px;
+}
+.field input:focus-visible { outline: none; border-color: var(--paper); }
+.check {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  text-align: left;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--ink-3);
+}
+.check input { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--paper); flex: none; }
+.check a { color: var(--paper); }
+.form-error { font-size: 10px; letter-spacing: 1px; color: var(--paper); min-height: 14px; }
+.hp { position: absolute; left: -5000px; width: 1px; height: 1px; opacity: 0; }
+
+#second-chance { width: 100%; max-width: 320px; }
+#second-chance form { margin-top: 10px; }
+
+/* ---- score-kaart-viewer (webview-hoofdpad: bewaren + link kopiëren) ---- */
+#share-view {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: var(--ink-0);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px;
+  text-align: center;
+  overflow-y: auto; /* landscape-webviews: content moet altijd bereikbaar blijven */
+  touch-action: auto;
+}
+/* centreert korte content zonder lange content bovenaan af te knippen (zelfde truc als .screen) */
+#share-view > :first-child { margin-top: auto; }
+#share-view > :last-child { margin-bottom: auto; }
+#share-img {
+  max-width: min(62vw, 300px);
+  max-height: 52vh;
+  width: auto;
+  height: auto; /* beide assen vrij: de 4:5-kaart mag nooit vervormen */
+  border: 2px solid var(--paper);
+  box-shadow: 6px 6px 0 var(--ink-1);
+  /* iOS long-press "Bewaar afbeelding" moet werken ondanks user-select:none op de stage */
+  -webkit-touch-callout: default;
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+/* ---- CRT-laag ---- */
+#crt {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9;
+  background:
+    repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.22) 0px, rgba(0, 0, 0, 0.22) 1px,
+      transparent 1px, transparent 3px);
+}
+#crt::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center,
+    transparent 58%, rgba(0, 0, 0, 0.42) 100%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #banner { animation: none; }
+  #tutor { animation: none; }
+  .btn-primary:active { transform: none; }
+}
+
+@media (min-width: 700px) {
+  #stage {
+    border: 2px solid var(--ink-1);
+    box-shadow: 0 0 0 1px var(--ink-0), 12px 12px 0 var(--ink-1);
+  }
+}

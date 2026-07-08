@@ -32,7 +32,12 @@ window.MILKRUN_CONFIG = {
   ROUND_1_END: '2026-07-11T23:58:00+02:00',
   FINALE: '2026-08-29T20:00:00+02:00',
 
-  SHARE_URL: 'https://popcornbrains.com/milk-run/'
+  SHARE_URL: 'https://popcornbrains.com/milk-run/',
+
+  // Het merk-adres onderaan de deel-kaart. De game LEEFT op popcornbrains.com
+  // (de deep-link ?beat= blijft daarheen wijzen), maar de kaart draagt het
+  // publieksmerk milkinc.be, dat is waar fans Milk Inc. kennen.
+  SHARE_CARD_HOST: 'milkinc.be'
 };
 
 // Veilige opslag: Safari met "Blokkeer alle cookies" gooit op localStorage;

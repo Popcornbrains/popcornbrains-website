@@ -230,24 +230,26 @@
     return u + (u.indexOf('?') > -1 ? '&' : '?') + 'beat=' + score;
   }
   // Vergelijkende share (fix 3/7, de Wordle-les): een vraag lokt een antwoord uit.
+  // De stem-CTA staat NIET meer in de tekst, die draagt de deel-kaart al
+  // (STEM OP MEDICINE · VRT ZOMERHIT). De tekst is puur brag + uitdaging.
   function shareText(res) {
     const url = shareUrlWith(res.score);
     if (res.win) {
-      return 'U WIN! IK VLOOG 30 JAAR MILK INC. UIT · SCORE ' + fmtScore(res.score) +
-        '. KLOP MIJ EN STEM OP MEDICINE: ' + url;
+      return 'IK VLOOG 30 JAAR MILK INC. UIT · SCORE ' + fmtScore(res.score) +
+        '. KLOP JE MIJ? ' + url;
     }
     if (res.year >= 2026) {
       // verder dan 2026 kan niet: bij een verlies in het eindjaar wordt de
       // score de uitdaging (review r3)
       return 'IK HAALDE 2026 IN MILK RUN · SCORE ' + fmtScore(res.score) +
-        '. KLOP MIJN SCORE EN STEM OP MEDICINE: ' + url;
+        '. KLOP JE MIJN SCORE? ' + url;
     }
     if (res.year) {
       return 'IK GERAAKTE TOT ' + res.year + ' IN MILK RUN · SCORE ' + fmtScore(res.score) +
-        '. KAN JIJ VERDER? STEM OOK OP MEDICINE: ' + url;
+        '. KAN JIJ VERDER? ' + url;
     }
     return 'IK VLOOG DOOR 30 JAAR MILK INC. · SCORE ' + fmtScore(res.score) +
-      '. KLOP MIJ EN STEM OP MEDICINE: ' + url;
+      '. KLOP JE MIJ? ' + url;
   }
   // share_ok telt maximaal ÉÉN keer per share_tap (review r3: anders kan de
   // kopieerknop de conversieratio boven 100% duwen).

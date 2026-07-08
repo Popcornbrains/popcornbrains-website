@@ -111,7 +111,7 @@
     spaced(g, 'STEM OP MEDICINE · VRT ZOMERHIT', CX, 1226, 3);
     g.fillStyle = '#6e6e6a';
     g.font = '400 32px "' + F + '"';
-    spaced(g, hostFromUrl(CFG.SHARE_URL), CX, 1282, 3);
+    spaced(g, (CFG.SHARE_CARD_HOST || hostFromUrl(CFG.SHARE_URL)).toUpperCase(), CX, 1282, 3);
 
     return c;
   }

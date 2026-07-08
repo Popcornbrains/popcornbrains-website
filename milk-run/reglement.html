@@ -5,10 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Wedstrijdreglement · MILK RUN</title>
 <link rel="icon" href="assets/img/favicon.ico">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preload" href="assets/fonts/space-mono-400.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/space-mono-700.woff2" as="font" type="font/woff2" crossorigin>
 <style>
+  /* Self-hosted (OFL): geen Google Fonts-request, geen third-party
+     font-disclosure in de privacyverklaring nodig (zie css/styles.css). */
+  @font-face { font-family:'Space Mono'; font-style:normal; font-weight:400;
+    font-display:swap; src:url('assets/fonts/space-mono-400.woff2') format('woff2'); }
+  @font-face { font-family:'Space Mono'; font-style:normal; font-weight:700;
+    font-display:swap; src:url('assets/fonts/space-mono-700.woff2') format('woff2'); }
   :root { --ink-1:#232321; --ink-2:#6e6e6a; --ink-3:#b8b8b2; --paper:#fff; }
   * { box-sizing: border-box; }
   body { background:#000; color:var(--ink-3); font-family:'Space Mono',monospace;

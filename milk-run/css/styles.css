@@ -185,11 +185,19 @@ html, body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  padding: 22px 18px;
+  gap: 10px;
+  padding: 12px 18px;
   text-align: center;
   overflow-y: auto;
   z-index: 2;
+}
+/* Op telefoons gebruikt een scherm de VOLLEDIGE viewport i.p.v. enkel de 9:16
+   stage (de letterbox-balken erboven/onder gaven anders verloren hoogte, waardoor
+   het inschrijfformulier moest scrollen om te spelen — 2026-07-08d). Enkel mobiel:
+   desktop/tablet houden het geframede 9:16-overlay. Faalt `fixed` ooit, dan valt
+   het terug op het huidige absolute gedrag = geen regressie. */
+@media (max-width: 640px) {
+  .screen { position: fixed; }
 }
 /* centreert korte content, maar knipt lange content niet af bovenaan */
 .screen > :first-child { margin-top: auto; }
@@ -228,17 +236,18 @@ html, body {
   max-width: 40ch;
   line-height: 1.4;
 }
-/* prijsblok op de inschrijfstap (fix 3/7): de prijs is de conversiehefboom */
-.prize {
+/* prijsblok op de inschrijfstap (fix 3/7): de prijs is de conversiehefboom.
+   Compacte "lead" i.p.v. het grote blok, zodat het formulier op één scherm past
+   (2026-07-08d) — de splash verkocht de prijs al, hier volstaat een strakke kop. */
+.prize-lead {
   border: 2px solid var(--paper);
-  box-shadow: 4px 4px 0 var(--ink-2);
-  padding: 14px 18px;
+  box-shadow: 3px 3px 0 var(--ink-2);
+  padding: 8px 13px;
   width: 100%;
   max-width: 320px;
 }
-.prize-big { font-size: 16px; font-weight: 700; letter-spacing: 2px; line-height: 1.5; }
-.prize-sub { font-size: 10px; letter-spacing: 2px; color: var(--ink-3); margin-top: 7px; }
-.prize-fine { font-size: 9px; letter-spacing: 1px; color: var(--ink-2); margin-top: 5px; }
+.prize-name { font-size: 13px; font-weight: 700; letter-spacing: 1px; line-height: 1.3; }
+.prize-meta { font-size: 8.5px; letter-spacing: 1px; color: var(--ink-2); margin-top: 4px; line-height: 1.4; }
 
 .fine { font-size: 10px; letter-spacing: 1px; line-height: 1.7; color: var(--ink-2); max-width: 40ch; }
 .fine.one-line { white-space: nowrap; max-width: none; }
@@ -286,44 +295,44 @@ html, body {
 .row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 
 /* ---- formulier ---- */
-form { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 320px; }
-.field { display: flex; flex-direction: column; gap: 5px; text-align: left; }
-.field span { font-size: 9px; letter-spacing: 1px; color: var(--ink-3); line-height: 1.5; }
+form { display: flex; flex-direction: column; gap: 9px; width: 100%; max-width: 320px; }
+.field { display: flex; flex-direction: column; gap: 3px; text-align: left; }
+.field span { font-size: 9px; letter-spacing: 1px; color: var(--ink-3); line-height: 1.35; }
 .field input {
   background: var(--ink-1);
   border: 2px solid var(--ink-2);
   color: var(--paper);
   font-family: var(--mono);
   font-size: 16px; /* voorkomt iOS-zoom */
-  padding: 11px 10px;
+  padding: 10px 10px;
 }
 .field input:focus-visible { outline: none; border-color: var(--paper); }
 .check {
   display: flex;
-  gap: 9px;
+  gap: 7px;
   align-items: flex-start;
   text-align: left;
-  font-size: 11px;
-  line-height: 1.5;
+  font-size: 10px;
+  line-height: 1.35;
   color: var(--ink-3);
 }
-.check input { width: 18px; height: 18px; margin-top: 1px; accent-color: var(--paper); flex: none; }
+.check input { width: 16px; height: 16px; margin-top: 1px; accent-color: var(--paper); flex: none; }
 .check a { color: var(--paper); }
 .form-error { font-size: 10px; letter-spacing: 1px; color: var(--paper); min-height: 14px; }
 .hp { position: absolute; left: -5000px; width: 1px; height: 1px; opacity: 0; }
 
 /* voornaam + achternaam naast elkaar (bespaart een rij op het game-scherm) */
-.field-row { display: flex; gap: 10px; }
+.field-row { display: flex; gap: 9px; }
 .field-row .field { flex: 1 1 0; min-width: 0; }
 
 /* kennisvraag: één tik, geen typwerk (Sony-legal deelnamevoorwaarde) */
 .choices { text-align: left; }
-.choices-q { font-size: 9px; letter-spacing: 1px; color: var(--ink-3); line-height: 1.5; margin: 0 0 7px; }
-.choice-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.choices-q { font-size: 9px; letter-spacing: 1px; color: var(--ink-3); line-height: 1.35; margin: 0 0 5px; }
+.choice-row { display: flex; flex-wrap: wrap; gap: 6px; }
 .choice {
   display: inline-flex; align-items: center; gap: 7px;
   background: var(--ink-1); border: 2px solid var(--ink-2); color: var(--paper);
-  padding: 8px 11px; font-size: 12px; letter-spacing: 1px; cursor: pointer;
+  padding: 6px 10px; font-size: 12px; letter-spacing: 1px; cursor: pointer;
 }
 .choice input { width: 15px; height: 15px; margin: 0; accent-color: var(--paper); flex: none; }
 .choice:has(input:checked) { border-color: var(--paper); }

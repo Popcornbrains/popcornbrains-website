@@ -85,10 +85,15 @@
   const status = () => STORE.get('milkrun_signup') || '';
 
   function handleSignup(f, doneEl) {
+    const firstname = f.querySelector('[name=firstname]').value.trim();
+    const lastname = f.querySelector('[name=lastname]').value.trim();
     const email = f.querySelector('[name=email]').value.trim();
     const guess = f.querySelector('[name=guess]').value.trim();
+    const kennisEl = f.querySelector('[name=kennis]:checked');
+    const kennis = kennisEl ? kennisEl.value : '';
     const rules = f.querySelector('[name=rules]').checked;
-    const news = f.querySelector('[name=newsletter]').checked;
+    const optinRegoli = f.querySelector('[name=optin_regoli]').checked;
+    const optinSony = f.querySelector('[name=optin_sony]').checked;
     const trap = f.querySelector('[name=website]').value; // honeypot
     const err = f.querySelector('.form-error');
     err.textContent = '';
@@ -96,11 +101,21 @@
     const state = contestState();
     if (state === 'voor') { err.textContent = 'DE WEDSTRIJD START OP MA 6 JULI OM 12:00.'; return false; }
     if (state === 'na') { err.textContent = 'DE WEDSTRIJD IS AFGELOPEN.'; return false; }
+    if (!firstname || !lastname) { err.textContent = 'VUL JE VOOR- EN ACHTERNAAM IN.'; return false; }
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { err.textContent = 'VUL EEN GELDIG E-MAILADRES IN.'; return false; }
     if (!/^\d{1,9}$/.test(guess)) { err.textContent = 'DE SCHIFTINGSVRAAG VRAAGT EEN GETAL.'; return false; }
+    if (!kennis) { err.textContent = 'BEANTWOORD DE KENNISVRAAG OM MEE TE DINGEN.'; return false; }
+    if (kennis !== 'medicine') { err.textContent = 'DAT IS NIET DE NIEUWSTE SINGLE. TIP: JE STEMT ER STRAKS VOOR.'; return false; }
     if (!rules) { err.textContent = 'AKKOORD MET HET REGLEMENT IS NODIG OM MEE TE DINGEN.'; return false; }
     if (!CFG.ENDPOINT && !LOCAL) { err.textContent = 'INSCHRIJVEN KAN EVEN NIET. SPELEN WEL!'; return false; }
-    send({ type: 'entry', email, guess, newsletter: news ? 'ja' : 'nee' });
+    send({
+      type: 'entry', firstname, lastname, email, guess, kennis,
+      optin_regoli: optinRegoli ? 'ja' : 'nee',
+      optin_sony: optinSony ? 'ja' : 'nee',
+      // legacy-veld: houdt een nog-niet-geredeploye backend een opt-in-signaal
+      // zodat er in het overgangsvenster geen toestemming verloren gaat
+      newsletter: (optinRegoli || optinSony) ? 'ja' : 'nee'
+    });
     STORE.set('milkrun_signup', 'done');
     if (doneEl) { doneEl.hidden = false; f.hidden = true; }
     return true;

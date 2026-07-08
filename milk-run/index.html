@@ -26,7 +26,7 @@
 <link rel="apple-touch-icon" href="assets/img/favicon-180.png">
 <link rel="preload" href="assets/fonts/space-mono-700.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/space-mono-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/styles.css?v=r14">
+<link rel="stylesheet" href="css/styles.css?v=r15">
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -78,7 +78,7 @@
           "name": "Wat kan je winnen met het Milk Inc.-spel?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "Eén golden VIP-duoticket met Meet & Greet voor Milk Inc. Forever in de AFAS Dome op vrijdag 23 oktober 2026. Deelnemen is gratis; de winnaar is wie de schiftingsvraag het dichtst benadert."
+            "text": "Eén golden VIP-duoticket met Meet & Greet voor Milk Inc. Forever in de AFAS Dome op vrijdag 23 oktober 2026. Deelnemen is gratis; de winnaar is wie de kennisvraag juist beantwoordt en de schiftingsvraag het dichtst benadert."
           }
         },
         {
@@ -137,6 +137,16 @@
         <p class="prize-fine">GOLDEN DUOTICKET · ÉÉN WINNAAR</p>
       </div>
       <form id="signup-form" novalidate>
+        <div class="field-row">
+          <label class="field">
+            <span>VOORNAAM</span>
+            <input type="text" name="firstname" autocomplete="given-name" placeholder="Voornaam" required>
+          </label>
+          <label class="field">
+            <span>ACHTERNAAM</span>
+            <input type="text" name="lastname" autocomplete="family-name" placeholder="Achternaam" required>
+          </label>
+        </div>
         <label class="field">
           <span>JOUW E-MAILADRES</span>
           <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="naam@voorbeeld.be" required>
@@ -145,13 +155,25 @@
           <span>SCHIFTINGSVRAAG: HOEVEEL KEER ZAL DEZE GAME GESPEELD ZIJN OP ZA 29/8 OM 20:00?</span>
           <input type="text" name="guess" inputmode="numeric" pattern="\d*" placeholder="bv. 25000" required>
         </label>
+        <div class="choices" role="radiogroup" aria-label="Kennisvraag: wat is de nieuwste single van Milk Inc.?">
+          <p class="choices-q">KENNISVRAAG: WAT IS DE NIEUWSTE SINGLE VAN MILK INC.?</p>
+          <div class="choice-row">
+            <label class="choice"><input type="radio" name="kennis" value="medicine"><span>MEDICINE</span></label>
+            <label class="choice"><input type="radio" name="kennis" value="walkonwater"><span>WALK ON WATER</span></label>
+            <label class="choice"><input type="radio" name="kennis" value="lavache"><span>LA VACHE</span></label>
+          </div>
+        </div>
         <label class="check">
           <input type="checkbox" name="rules" required>
-          <span>Ik doe mee en ga akkoord met het <a href="reglement.html">wedstrijdreglement</a>.</span>
+          <span>Ik heb het <a href="reglement.html">wedstrijdreglement en de privacybepalingen</a> gelezen en ga hiermee akkoord.</span>
         </label>
         <label class="check">
-          <input type="checkbox" name="newsletter">
-          <span>Ik schrijf me in op de nieuwsbrief &amp; updates rond Milk Inc. (zie <a href="reglement.html">reglement</a>).</span>
+          <input type="checkbox" name="optin_regoli">
+          <span>Ja, ik ontvang graag per e-mail nieuws, updates, wedstrijden, evenementen en promoties van Milk Inc. Mijn gegevens mogen hiervoor worden verwerkt door Regoli BVBA.</span>
+        </label>
+        <label class="check">
+          <input type="checkbox" name="optin_sony">
+          <span>Ja, ik ontvang graag per e-mail nieuws, updates, wedstrijden, evenementen en promoties van Milk Inc. en andere Sony Music-artiesten. Ik geef toestemming dat mijn gegevens worden gedeeld met en verwerkt door Sony Music Entertainment Belgium NV.</span>
         </label>
         <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
         <p class="form-error" role="alert"></p>
@@ -179,6 +201,16 @@
       <div id="second-chance" hidden>
         <p class="subtitle small">ALSNOG KANS MAKEN OP HET GOLDEN TICKET?</p>
         <form id="signup-form-2" novalidate>
+          <div class="field-row">
+            <label class="field">
+              <span>VOORNAAM</span>
+              <input type="text" name="firstname" autocomplete="given-name" placeholder="Voornaam" required>
+            </label>
+            <label class="field">
+              <span>ACHTERNAAM</span>
+              <input type="text" name="lastname" autocomplete="family-name" placeholder="Achternaam" required>
+            </label>
+          </div>
           <label class="field">
             <span>JOUW E-MAILADRES</span>
             <input type="email" name="email" autocomplete="email" inputmode="email" placeholder="naam@voorbeeld.be" required>
@@ -187,13 +219,25 @@
             <span>SCHIFTINGSVRAAG: HOEVEEL KEER GESPEELD OP ZA 29/8, 20:00?</span>
             <input type="text" name="guess" inputmode="numeric" pattern="\d*" placeholder="bv. 25000" required>
           </label>
+          <div class="choices" role="radiogroup" aria-label="Kennisvraag: wat is de nieuwste single van Milk Inc.?">
+            <p class="choices-q">KENNISVRAAG: WAT IS DE NIEUWSTE SINGLE VAN MILK INC.?</p>
+            <div class="choice-row">
+              <label class="choice"><input type="radio" name="kennis" value="medicine"><span>MEDICINE</span></label>
+              <label class="choice"><input type="radio" name="kennis" value="walkonwater"><span>WALK ON WATER</span></label>
+              <label class="choice"><input type="radio" name="kennis" value="lavache"><span>LA VACHE</span></label>
+            </div>
+          </div>
           <label class="check">
             <input type="checkbox" name="rules" required>
-            <span>Ik doe mee en ga akkoord met het <a href="reglement.html">wedstrijdreglement</a>.</span>
+            <span>Ik heb het <a href="reglement.html">wedstrijdreglement en de privacybepalingen</a> gelezen en ga hiermee akkoord.</span>
           </label>
           <label class="check">
-            <input type="checkbox" name="newsletter">
-            <span>Ik schrijf me in op de nieuwsbrief &amp; updates rond Milk Inc. (zie <a href="reglement.html">reglement</a>).</span>
+            <input type="checkbox" name="optin_regoli">
+            <span>Ja, ik ontvang graag per e-mail nieuws, updates, wedstrijden, evenementen en promoties van Milk Inc. Mijn gegevens mogen hiervoor worden verwerkt door Regoli BVBA.</span>
+          </label>
+          <label class="check">
+            <input type="checkbox" name="optin_sony">
+            <span>Ja, ik ontvang graag per e-mail nieuws, updates, wedstrijden, evenementen en promoties van Milk Inc. en andere Sony Music-artiesten. Ik geef toestemming dat mijn gegevens worden gedeeld met en verwerkt door Sony Music Entertainment Belgium NV.</span>
           </label>
           <input type="text" name="website" tabindex="-1" autocomplete="off" class="hp" aria-hidden="true">
           <p class="form-error" role="alert"></p>
@@ -225,6 +269,6 @@
 <script src="js/eras.js?v=r12"></script>
 <script src="js/game.js?v=r11"></script>
 <script src="js/sharecard.js?v=r4"></script>
-<script src="js/signup.js?v=r4"></script>
+<script src="js/signup.js?v=r5"></script>
 </body>
 </html>

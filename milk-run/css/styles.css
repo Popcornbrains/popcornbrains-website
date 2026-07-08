@@ -312,6 +312,23 @@ form { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width:
 .form-error { font-size: 10px; letter-spacing: 1px; color: var(--paper); min-height: 14px; }
 .hp { position: absolute; left: -5000px; width: 1px; height: 1px; opacity: 0; }
 
+/* voornaam + achternaam naast elkaar (bespaart een rij op het game-scherm) */
+.field-row { display: flex; gap: 10px; }
+.field-row .field { flex: 1 1 0; min-width: 0; }
+
+/* kennisvraag: één tik, geen typwerk (Sony-legal deelnamevoorwaarde) */
+.choices { text-align: left; }
+.choices-q { font-size: 9px; letter-spacing: 1px; color: var(--ink-3); line-height: 1.5; margin: 0 0 7px; }
+.choice-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.choice {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--ink-1); border: 2px solid var(--ink-2); color: var(--paper);
+  padding: 8px 11px; font-size: 12px; letter-spacing: 1px; cursor: pointer;
+}
+.choice input { width: 15px; height: 15px; margin: 0; accent-color: var(--paper); flex: none; }
+.choice:has(input:checked) { border-color: var(--paper); }
+.choice:focus-within { outline: none; border-color: var(--paper); }
+
 #second-chance { width: 100%; max-width: 320px; }
 #second-chance form { margin-top: 10px; }
 

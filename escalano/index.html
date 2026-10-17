@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="nl" data-view="landing">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ESCALANO scorebord</title>
+<meta name="description" content="Live scorebord van ESCALANO: geef je score in op je gsm, volg de stand op de tv.">
+<meta name="theme-color" content="#F3E4C7">
+<meta name="robots" content="noindex">
+<link rel="icon" href="assets/brand/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/brand/escalano-icoon-32.png">
+<link rel="apple-touch-icon" href="assets/brand/escalano-icoon-180.png">
+<!-- Installeerbaar als app (gsm en tv). theme-color begint creme; app.js zet hem per weergave via ESCALANO_PLATFORM.setTheme. -->
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ESCALANO">
+<!-- Zelf gehoste fonts (geen Google): de twee letters boven de vouw alvast ophalen, de rest via css/fonts.css. -->
+<link rel="preload" href="assets/fonts/instrument-serif-regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/barlow-condensed-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/escalano.css">
+</head>
+<body>
+<a class="skip" href="#app">Naar de inhoud</a>
+<!-- Een pagina, vier weergaven: landing, speler, tv, beheer. app.js vult #app op basis van de URL.
+     Geen aria-live op het geheel (dan leest een schermlezer elke render helemaal voor): alleen de berichtregels
+     dragen role="status" of role="alert". -->
+<main id="app" class="app">
+  <noscript>
+    <section class="pagina">
+      <h1 class="titel">ESCALANO scorebord</h1>
+      <p class="tekst">Dit scorebord heeft JavaScript nodig. Zet het aan en laad de pagina opnieuw.</p>
+    </section>
+  </noscript>
+</main>
+<script src="js/config.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/vendor/qrcode.min.js"></script>
+<script src="js/api.js"></script>
+<script src="js/platform.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

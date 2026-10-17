@@ -1,0 +1,28 @@
+ESCALANO: zelf gehoste fonts (assets/fonts/)
+
+De drie families in deze map zijn uitgegeven onder de SIL Open Font License 1.1 (OFL 1.1).
+Volledige licentietekst: https://openfontlicense.org/open-font-license-official-text/
+(ook https://scripts.sil.org/OFL). Samengevat: vrij te gebruiken, in te bedden en te verspreiden,
+ook commercieel; niet apart te verkopen; de copyrightmelding blijft bij de bestanden.
+
+De bestanden hier zijn woff2-subsets (Latijns bereik: Nederlands, Frans, Spaans) van de originele
+TTF's, gemaakt met fontTools pyftsubset (17/10/2026). De name-tabel met de copyrightmelding is
+bewaard. De originele TTF's staan niet in deze map en niet in git.
+
+Instrument Serif (Regular, Italic)
+  Copyright 2022 The Instrument Serif Project Authors (https://github.com/Instrument/instrument-serif)
+  Licentie: SIL OFL 1.1
+  Bron: https://fonts.google.com/specimen/Instrument+Serif
+  Bestanden: instrument-serif-regular.woff2, instrument-serif-italic.woff2
+
+Barlow Condensed (Medium 500, SemiBold 600, Bold 700)
+  Copyright 2017 The Barlow Project Authors (https://github.com/jpt/barlow)
+  Licentie: SIL OFL 1.1
+  Bron: https://fonts.google.com/specimen/Barlow+Condensed
+  Bestanden: barlow-condensed-500.woff2, barlow-condensed-600.woff2, barlow-condensed-700.woff2
+
+DM Sans (variabel: assen opsz 9 tot 40 en wght 100 tot 1000)
+  Copyright 2014 The DM Sans Project Authors (https://github.com/googlefonts/dm-fonts)
+  Licentie: SIL OFL 1.1
+  Bron: https://fonts.google.com/specimen/DM+Sans
+  Bestand: dm-sans-variable.woff2

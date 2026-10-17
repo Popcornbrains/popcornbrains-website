@@ -1,0 +1,16 @@
+{
+  "name": "ESCALANO",
+  "short_name": "ESCALANO",
+  "description": "Live scorebord van ESCALANO: geef je score in op je gsm, volg de stand op de tv.",
+  "lang": "nl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#F3E4C7",
+  "theme_color": "#F3E4C7",
+  "icons": [
+    { "src": "assets/brand/escalano-icoon-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "assets/brand/escalano-appicoon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "assets/brand/escalano-appicoon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

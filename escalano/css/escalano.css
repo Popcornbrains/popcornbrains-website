@@ -1,0 +1,711 @@
+/* ESCALANO live scorebord. Alle stijlen, geen framework.
+   Merktokens overgenomen uit brand-assets/escalano/brand-tokens.css (v1.3).
+   Papier (creme) voor gsm, beheer en landing; het bord (donkergroen) voor de tv. */
+
+:root {
+  --creme: #F3E4C7;
+  --groen: #123D33;
+  --terra: #BA4B2B;
+  --mosterd: #DCA52C;
+  --roze: #D78D78;
+  /* De letterstapels: het ene thuis van de drie tokens. De "Fallback"-families staan in css/fonts.css (op maat
+     gezet met size-adjust); een onbekende familie slaat de browser over, dus dit klopt ook zonder fonts.css. */
+  --f-display: "Instrument Serif", "Instrument Serif Fallback", "Instrument Serif Fallback 2", Georgia, "Times New Roman", serif;
+  --f-label: "Barlow Condensed", "Barlow Condensed Fallback", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --f-body: "DM Sans", "DM Sans Fallback", "DM Sans Fallback 2", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+
+  /* papier: creme canvas, donkergroene letter; tekst onder 24 px haalt 4.5:1 (zacht 5.1:1, terra-tekst 4.8:1) */
+  --bg: var(--creme);
+  --fg: var(--groen);
+  --fg-zacht: rgba(18, 61, 51, 0.76);
+  --terra-tekst: #A1492C;   /* terracotta voor tekst (85 % terra, 15 % groen); vlakken en randen blijven puur terra */
+  --lijn: rgba(18, 61, 51, 0.22);
+  --lijn-zacht: rgba(18, 61, 51, 0.10);
+  --paneel: rgba(18, 61, 51, 0.055);
+  --paneel-sterk: rgba(18, 61, 51, 0.10);
+  /* een schaduw (alleen papieren tegels), een radiusschaal, een bewegingscurve, een 4 px-raster */
+  --schaduw: 0 1px 2px rgba(18, 61, 51, 0.08), 0 10px 28px -14px rgba(18, 61, 51, 0.32);
+  --focus: var(--terra);
+  --r-pil: 999px;
+  --r-kaart: 20px;
+  --r-tegel: 16px;
+  --r-knop: 14px;
+  --radius: var(--r-kaart);
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --snel: 200ms;
+  --traag: 320ms;
+  color-scheme: light;
+}
+
+/* het bord: donkergroen canvas, creme letter; schaal mee met het scherm (16px bij 1920x1080) */
+html[data-view="tv"] {
+  --bg: var(--groen);
+  --fg: var(--creme);
+  --fg-zacht: rgba(243, 228, 199, 0.66);
+  --terra-tekst: var(--creme);   /* op groen leest terra niet (2.4:1): tekst die alarmeert wordt creme, de stip blijft terra */
+  --lijn: rgba(243, 228, 199, 0.24);
+  --lijn-zacht: rgba(243, 228, 199, 0.10);
+  --paneel: rgba(243, 228, 199, 0.06);
+  --paneel-sterk: rgba(243, 228, 199, 0.12);
+  --focus: var(--mosterd);
+  color-scheme: dark;
+  font-size: min(0.83334vw, 1.48149vh);   /* net boven 16px op 1920x1080, zodat 4rem echt 64px is */
+}
+
+/* ---------- basis ---------- */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+html[data-view="tv"] body { overflow: hidden; cursor: none; }
+img, svg { display: block; max-width: 100%; height: auto; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+h1, h2, h3, p, ol, ul, fieldset { margin: 0; padding: 0; }
+fieldset { border: 0; min-width: 0; }
+ol, ul { list-style: none; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; }
+.woordmerk:focus-visible { border-radius: var(--r-knop); }
+.skip {
+  position: absolute; left: 16px; top: -48px; padding: 8px 14px; background: var(--groen); color: var(--creme);
+  border-radius: var(--r-knop); z-index: 10; font-weight: 500;
+}
+.skip:focus { top: 12px; }
+.visueel-verborgen {
+  position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+}
+
+/* ---------- typografie ---------- */
+
+.titel { font-family: var(--f-display); font-weight: 400; font-size: 28px; line-height: 1.08; text-wrap: balance; }
+.zin { font-family: var(--f-display); font-weight: 400; font-size: 22px; line-height: 1.15; text-wrap: pretty; }
+.zin strong { font-weight: 400; color: var(--terra-tekst); }
+.tekst { font-size: 16px; line-height: 1.55; color: var(--fg-zacht); max-width: 48ch; text-wrap: pretty; }
+.tekst strong { color: var(--fg); font-weight: 500; }
+.label {
+  font-family: var(--f-label); font-weight: 700; font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--fg-zacht);
+}
+.label--terra { color: var(--terra-tekst); }
+.label--mosterd { color: var(--groen); background: var(--mosterd); padding: 2px 8px; border-radius: var(--r-pil); }
+.cijfers { font-variant-numeric: tabular-nums; }
+
+/* ---------- pagina (gsm, beheer) ---------- */
+
+.pagina {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 8px 16px 48px;
+  padding-left: max(16px, env(safe-area-inset-left));
+  padding-right: max(16px, env(safe-area-inset-right));
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+.pagina--breed { max-width: 760px; }
+.blok { display: grid; gap: 8px; }
+
+.kop { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.woordmerk { width: 160px; flex: 0 0 auto; }
+.woordmerk img { width: 100%; height: auto; }
+.pil {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 36px; padding: 4px 14px; border-radius: 999px;
+  background: var(--mosterd); color: var(--groen);
+  font-family: var(--f-label); font-weight: 700; font-size: 16px; letter-spacing: 0.08em; text-transform: uppercase;
+  white-space: nowrap;
+}
+.pil--stil { background: var(--paneel-sterk); color: var(--fg); }
+.pil--roze { background: var(--roze); }
+
+/* knoppen: elke klik heeft hover, focus en actief */
+.knop {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  min-height: 52px; padding: 8px 20px; border-radius: var(--r-knop);
+  border: 2px solid var(--groen); background: transparent; color: var(--groen);
+  font-family: var(--f-label); font-weight: 600; font-size: 20px; letter-spacing: 0.03em;
+  text-decoration: none; text-align: center; width: 100%;
+  transition: transform var(--snel) var(--ease), background-color var(--snel) var(--ease);
+}
+.knop:hover { background: var(--paneel); }
+.knop:active { transform: scale(0.985); }
+/* een hoofdknop breekt nooit midden in een score: een regel, de letter krimpt mee op een smal scherm */
+.knop--primair {
+  background: var(--terra); border-color: var(--terra); color: var(--creme);
+  font-weight: 700; font-size: clamp(18px, 5.4vw, 22px); letter-spacing: 0.04em; text-transform: uppercase; min-height: 52px;
+  white-space: nowrap;
+}
+.knop--primair:hover { box-shadow: inset 0 0 0 100px rgba(18, 61, 51, 0.14); }
+.knop--gewapend { background: var(--groen); border-color: var(--groen); color: var(--creme); }
+.knop--gewapend:hover { background: var(--groen); }
+/* tikdoelen: nooit onder 48 px (zweethanden) */
+.knop--klein { min-height: 48px; font-size: 17px; padding: 6px 14px; width: auto; }
+.knop--stil {
+  border-color: transparent; background: transparent; color: var(--fg-zacht); text-decoration: underline;
+  text-underline-offset: 3px; font-family: var(--f-body); font-weight: 500; font-size: 15px; letter-spacing: 0;
+  width: auto; min-height: 48px; padding: 6px 10px;
+}
+.knop--stil:hover { background: var(--paneel); color: var(--fg); }
+.knop[disabled], .knop[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
+.knop[disabled]:active { transform: none; }
+.knop--link { width: auto; }
+
+/* lijst van namen, veldkeuze */
+.namen { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.namen .knop { min-height: 52px; font-size: 20px; padding: 8px 12px; overflow-wrap: anywhere; }
+.namen .knop.is-gekozen { background: var(--groen); color: var(--creme); }
+.velden { display: flex; flex-wrap: wrap; gap: 8px; }
+.velden .knop { width: auto; min-width: 88px; min-height: 48px; padding: 6px 16px; }
+.velden .knop.is-gekozen { background: var(--groen); color: var(--creme); }
+
+/* kaarten */
+.kaart {
+  border: 1.5px solid var(--lijn); border-radius: var(--r-kaart); padding: 8px 12px 12px; display: grid; gap: 8px;
+  background: transparent;
+}
+.kaart--vol { background: var(--paneel); border-color: transparent; }
+.kaart--accent { border-color: var(--terra); }
+.kaart-kop { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 20px; line-height: 1.2; }
+
+/* score-invoer: twee tegels, raster, bevestigen */
+.tegels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.tegel {
+  display: grid; gap: 4px; align-content: start; justify-items: center; text-align: center;
+  min-height: 112px; padding: 8px; border-radius: var(--r-tegel);
+  border: 2px solid var(--lijn); background: var(--paneel); color: var(--groen);
+  box-shadow: var(--schaduw); width: 100%;
+  transition: transform var(--snel) var(--ease), border-color var(--snel) var(--ease);
+}
+.tegel:hover { border-color: var(--groen); }
+.tegel:active { transform: scale(0.985); }
+.tegel.is-actief { border-color: var(--terra); border-width: 3px; background: rgba(186, 75, 43, 0.08); }
+.tegel.is-vast { box-shadow: none; cursor: default; }
+.tegel.is-vast:active { transform: none; }
+.tegel .label { line-height: 1.2; }   /* "Jullie" / "Zij" (13 px): strak, elke pixel boven de vouw telt */
+.tegel-namen { font-family: var(--f-label); font-weight: 600; font-size: 18px; line-height: 1.1; overflow-wrap: anywhere; }
+.tegel-namen span { display: block; }
+.tegel-cijfer { font-family: var(--f-label); font-weight: 700; font-size: 44px; line-height: 1; font-variant-numeric: tabular-nums; }
+.tegel-cijfer.is-leeg { color: var(--lijn); }
+.tegel.wint .tegel-cijfer { color: var(--terra); }
+
+/* raster 0..21: cellen nooit smaller dan 48 px, op 360 px valt het vanzelf naar vijf kolommen */
+.rooster { display: grid; grid-template-columns: repeat(auto-fill, minmax(48px, 1fr)); gap: 4px; }
+.rooster .knop {
+  min-height: 48px; padding: 4px; border-width: 1.5px; border-color: var(--lijn); border-radius: var(--r-knop);
+  font-size: 24px; font-weight: 600;
+}
+.rooster .knop.is-gekozen { background: var(--groen); border-color: var(--groen); color: var(--creme); }
+
+.bevestig { display: grid; gap: 4px; }
+.melding { font-size: 15px; line-height: 1.45; color: var(--fg-zacht); }
+.melding--fout { color: var(--terra-tekst); }
+
+/* verbinding */
+.verbinding { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--fg-zacht); }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--fg-zacht); flex: 0 0 auto; }
+.dot--ok { background: var(--mosterd); }
+.dot--kwijt { background: var(--terra); }
+.dot--lokaal { background: transparent; border: 2px solid var(--fg-zacht); }
+@media (prefers-reduced-motion: no-preference) {
+  .dot--ok { animation: pols 2.4s ease-in-out infinite; }
+  @keyframes pols { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+  .verschijnt { animation: verschijn var(--traag) var(--ease); }
+  @keyframes verschijn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+}
+
+/* stand op gsm en beheer */
+.stand summary {
+  cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between;
+  min-height: 48px; padding: 6px 0; border-top: 1.5px solid var(--lijn); border-bottom: 1.5px solid var(--lijn);
+}
+.stand summary::-webkit-details-marker { display: none; }
+/* het plus-icoon (inline SVG, 1.75 px) draait tot een kruis; alleen de eigen summary, niet die van een genest blok */
+.stand summary .stand-icoon { width: 24px; height: 24px; transition: transform var(--snel) var(--ease); }
+.stand[open] > summary .stand-icoon { transform: rotate(45deg); }
+.standtabel { width: 100%; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+.standtabel th {
+  text-align: left; font-family: var(--f-label); font-weight: 700; font-size: 13px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--fg-zacht); padding: 10px 6px 6px;
+}
+.standtabel th.r { text-align: right; }
+.standtabel td { padding: 7px 6px; border-top: 1px solid var(--lijn-zacht); font-family: var(--f-label); font-size: 20px; font-weight: 600; }
+.standtabel td.r { text-align: right; }
+.standtabel td.rang { color: var(--fg-zacht); width: 36px; }
+.standtabel td.klein { font-size: 15px; font-weight: 500; color: var(--fg-zacht); }
+.standtabel tr.is-ik td { background: var(--paneel-sterk); }
+.standtabel tr.is-ik td:first-child { border-left: 4px solid var(--terra); border-radius: 8px 0 0 8px; }
+.standtabel tr.is-eerste td { font-weight: 700; }
+
+/* winnaar op gsm */
+.winnaar {
+  background: var(--groen); color: var(--creme); border-radius: var(--r-kaart); padding: 24px 20px; text-align: center;
+  display: grid; gap: 6px; justify-items: center;
+}
+.winnaar-titel { font-family: var(--f-display); font-style: italic; font-size: 26px; color: var(--mosterd); }
+.winnaar-naam { font-family: var(--f-label); font-weight: 700; font-size: 44px; line-height: 1; overflow-wrap: anywhere; }
+.winnaar-punten { font-family: var(--f-label); font-weight: 600; font-size: 20px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--mosterd); }
+.winnaar img { width: 64px; margin-bottom: 8px; }
+
+/* formulieren (beheer, landing) */
+.veld { display: grid; gap: 6px; }
+.veld label, .veld legend { font-weight: 500; font-size: 15px; }
+.invoer {
+  width: 100%; min-height: 52px; padding: 10px 14px; border-radius: var(--r-knop);
+  border: 1.5px solid var(--lijn); background: rgba(243, 228, 199, 0.5); color: var(--groen);
+  font-family: var(--f-body); font-size: 17px;
+}
+.invoer:hover { border-color: var(--groen); }
+/* een fout veld is gemarkeerd zonder focus: terracotta rand, de fouttekst staat eronder */
+.invoer[aria-invalid="true"] { border: 2px solid var(--terra); box-shadow: 0 0 0 3px rgba(186, 75, 43, 0.15); }
+.invoer::placeholder { color: var(--fg-zacht); opacity: 0.7; }
+.invoer--code { font-family: var(--f-label); font-size: 24px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; }
+textarea.invoer { min-height: 120px; resize: vertical; line-height: 1.5; }
+select.invoer { appearance: none; -webkit-appearance: none; background-image: none; padding-right: 40px; }
+.select-wrap { position: relative; }
+/* de pijl van de keuzelijst: dezelfde inline SVG-lijn (1.75 px) als elk ander icoon */
+.select-wrap::after {
+  content: ""; position: absolute; right: 14px; top: 50%; width: 24px; height: 24px; margin-top: -12px; pointer-events: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23123D33' stroke-width='1.75' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") center / 24px 24px no-repeat;
+}
+.startveld { display: grid; gap: 8px; padding: 12px; border: 1.5px solid var(--lijn); border-radius: var(--radius); }
+.startveld legend { float: left; width: 100%; margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+.startveld .pil { min-height: 30px; font-size: 14px; padding: 2px 12px; }
+.startveld-rij { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.fout { color: var(--terra-tekst); font-weight: 500; font-size: 15px; }
+.rij { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.rij > .knop { width: auto; flex: 1 1 auto; }
+.code-groot {
+  font-family: var(--f-label); font-weight: 700; font-size: 48px; letter-spacing: 0.16em; line-height: 1;
+  padding: 16px; border-radius: var(--r-tegel); background: var(--groen); color: var(--mosterd); text-align: center;
+}
+.links { display: grid; gap: 8px; }
+.links a { display: block; font-family: var(--f-body); font-size: 15px; overflow-wrap: anywhere; text-underline-offset: 3px; padding: 6px 0; }
+.links a span { display: block; font-size: 13px; color: var(--fg-zacht); text-decoration: none; }
+
+/* beheer: velden met scores */
+.beheer-veld { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 12px; align-items: center; }
+.beheer-veld .pil { min-height: 32px; font-size: 15px; }
+.beheer-teams { display: grid; gap: 2px; font-family: var(--f-label); font-weight: 600; font-size: 18px; line-height: 1.15; }
+.beheer-teams .wint { color: var(--terra); }
+.beheer-score { font-family: var(--f-label); font-weight: 700; font-size: 32px; line-height: 1; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.beheer-score.is-leeg { font-weight: 500; font-size: 15px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-zacht); }
+.beheer-acties { display: grid; gap: 10px; }
+.beheer-acties .knop { width: 100%; }
+
+/* M/V (v1.3, alleen voor de titel van de winnaar): twee knoppen van 48 px naast elkaar. M is de stille standaard,
+   V valt op in groen, zodat de organisator de vrouwen in een oogopslag terugvindt. */
+.mv-paar {
+  display: inline-grid; grid-template-columns: 48px 48px; flex: 0 0 auto;
+  border: 1.5px solid var(--lijn); border-radius: var(--r-knop); overflow: hidden; background: rgba(243, 228, 199, 0.5);
+}
+.mv {
+  min-width: 48px; min-height: 48px; padding: 0; border: 0; background: transparent; color: var(--fg-zacht);
+  font-family: var(--f-label); font-weight: 600; font-size: 20px; line-height: 1; letter-spacing: 0.04em;
+  transition: background-color var(--snel) var(--ease), color var(--snel) var(--ease);
+}
+.mv + .mv { border-left: 1.5px solid var(--lijn); }
+.mv:hover { background: var(--paneel); color: var(--fg); }
+.mv:active { background: var(--paneel-sterk); }
+/* binnen het paar (overflow hidden) staat de focusrand binnenin, anders wordt hij afgesneden */
+.mv:focus-visible { outline-offset: -4px; }
+.mv.is-aan { background: var(--paneel-sterk); color: var(--groen); font-weight: 700; }
+.mv--v.is-aan { background: var(--groen); color: var(--creme); }
+.naam-veld { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.naam-veld .invoer { flex: 1 1 auto; min-width: 0; }
+/* op de gsm een naam per rij (het paar neemt 96 px), vanaf 560 px weer twee naast elkaar */
+.startveld-rij--namen { grid-template-columns: minmax(0, 1fr); }
+.mv-blok { gap: 6px; }
+.mv-lijst { display: grid; grid-template-columns: minmax(0, 1fr); column-gap: 24px; }
+.mv-rij {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 56px; padding: 4px 0;
+  border-bottom: 1px solid var(--lijn-zacht);
+}
+.mv-naam { font-family: var(--f-label); font-weight: 600; font-size: 20px; line-height: 1.15; min-width: 0; overflow-wrap: anywhere; }
+@media (min-width: 560px) {
+  .startveld-rij--namen, .mv-lijst { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* ---------- landing ---------- */
+
+.landing {
+  min-height: 100vh; display: grid; grid-template-rows: 1fr auto; justify-items: center;
+}
+.landing-inhoud {
+  width: 100%; max-width: 420px; padding: 48px 16px 32px; display: grid; gap: 28px; justify-items: center; text-align: center;
+  align-content: center;
+}
+.landing-merk { display: grid; gap: 14px; justify-items: center; width: 100%; }
+.landing-merk .beeldmerk { width: 84px; }
+.landing-merk .woordmerk { width: min(100%, 320px); }
+.landing-slogan { font-family: var(--f-label); font-weight: 700; font-size: 14px; letter-spacing: 0.3em; text-transform: uppercase; margin-top: 2px; }
+.tagline { font-family: var(--f-display); font-style: italic; font-size: 30px; line-height: 1.1; }
+.landing-acties { display: grid; gap: 12px; width: 100%; max-width: 340px; }
+.landing-code { display: grid; gap: 10px; width: 100%; }
+/* de clubstrepen: de SVG houdt zijn verhouding, dus herhalen in de breedte in plaats van rekken */
+.strepen { width: 100%; height: 30px; background: url("../assets/brand/escalano-clubstrepen-horizontaal.svg") left center / auto 100% repeat-x; }
+
+/* ---------- tv (alles in rem: 1rem = 16px op 1920x1080) ---------- */
+
+.tv {
+  height: 100vh; display: grid; grid-template-rows: auto minmax(0, 1fr) auto; gap: 1.25rem;
+  padding: 2rem 2.5rem 0; overflow: hidden;
+}
+.tv-kop { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 2rem; }
+/* alleen het woordmerk (de slogan zit in het logo en wordt niet als tekst herhaald) */
+.tv-merk { display: grid; justify-items: start; }
+.tv-merk img { width: 20rem; height: auto; }
+.tv-titel { font-family: var(--f-display); font-weight: 400; font-size: 2.75rem; line-height: 1.05; text-align: center; white-space: nowrap; }
+.tv-pil {
+  justify-self: end; display: inline-flex; align-items: center; padding: 0.7rem 1.6rem; border-radius: 999px;
+  background: var(--mosterd); color: var(--groen);
+  font-family: var(--f-label); font-weight: 700; font-size: 1.75rem; line-height: 1; letter-spacing: 0.08em; text-transform: uppercase;
+  white-space: nowrap;
+}
+.tv-pil--stil { background: var(--paneel-sterk); color: var(--fg); }
+/* verbinding kwijt: ver-veld-nieuws, de pil wordt terracotta */
+.tv-pil--kwijt { background: var(--terra); color: var(--creme); }
+
+.tv-main { display: grid; grid-template-columns: minmax(0, 1fr) 33rem; gap: 2rem; min-height: 0; }
+/* twee kolommen stand (20 tot 24 spelers): breder paneel, zodat een naam 17 tekens krijgt */
+.tv-main[data-cols="2"] { grid-template-columns: minmax(0, 1fr) 49.5rem; }
+.tv-links { position: relative; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 1.25rem; min-height: 0; }
+
+/* de treden klimmen naar rechts zoals het beeldmerk (SPEC 6.3, v1.3): veld 1 rechtsboven en het hoogst, elk volgend
+   veld een trede lager en een trede naar links. Alle treden even breed, altijd 15rem schuinte in totaal: app.js zet
+   --n (het aantal velden) op .trap, elke trede draagt --i (0 = veld 1). Het oog komt linksonder binnen bij de QR en
+   klimt naar veld 1, naast de leider in de stand. */
+.trap {
+  --n: 4;
+  --step: calc(15rem / (var(--n) - 1));
+  display: flex; flex-direction: column; justify-content: center; gap: 0.8rem; min-height: 0;
+}
+.trede {
+  --i: 0;
+  width: calc(100% - (var(--n) - 1) * var(--step));
+  margin-left: calc((var(--n) - 1 - var(--i)) * var(--step));
+  display: grid; grid-template-columns: 9.5rem minmax(0, 1fr) auto minmax(0, 1fr); align-items: center;
+  min-height: 6.6rem; border: 0.125rem solid var(--lijn); border-radius: 999px; overflow: hidden;
+  background: var(--paneel);
+  flex-shrink: 0;   /* een rij wordt nooit samengedrukt: geen halve namen */
+}
+.trede-veld {
+  align-self: stretch; display: flex; align-items: center; padding-left: 2.4rem;
+  font-family: var(--f-label); font-weight: 700; font-size: 1.875rem; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--groen); background: var(--roze);
+}
+.trede[data-c="0"] .trede-veld { background: var(--mosterd); }
+.trede-team {
+  padding: 0.7rem 1.4rem; font-family: var(--f-label); font-weight: 600; font-size: 2.5rem; line-height: 1.04;
+  overflow-wrap: anywhere; min-width: 0;
+}
+.trede-team span { display: block; }
+.trede-team--b { text-align: right; padding-right: 2.6rem; }
+.trede-team.wint { color: var(--mosterd); }
+.trede-team.verliest { color: var(--fg-zacht); }
+.trede-score {
+  display: flex; align-items: center; justify-content: center; gap: 1.1rem; min-width: 13rem; padding: 0 0.5rem;
+  font-family: var(--f-label); font-weight: 700; font-size: 4.5rem; line-height: 1; font-variant-numeric: tabular-nums;
+  color: var(--mosterd);
+}
+.trede-score i { display: block; width: 0.125rem; height: 3rem; background: var(--lijn); }
+.trede-wacht {
+  font-family: var(--f-label); font-weight: 600; font-size: 2rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--fg-zacht);
+}
+/* vijf of zes velden: compacter, namen naast elkaar, elke naam een regel met ellipsis, scores blijven 64 px */
+.trap[data-courts="5"], .trap[data-courts="6"] { gap: 0.5rem; }
+/* v1.3: alle treden zijn nu even smal (15rem schuinte), dus de ruimte gaat naar de namen: een smallere veldkolom,
+   een scorekolom die alleen zo breed is als de score, minder lucht aan de ronde rechterkant */
+.trap[data-courts="5"] .trede, .trap[data-courts="6"] .trede { min-height: 4.9rem; grid-template-columns: 7rem minmax(0, 1fr) auto minmax(0, 1fr); }
+.trap[data-courts="5"] .trede-veld, .trap[data-courts="6"] .trede-veld { padding-left: 1.5rem; font-size: 1.6rem; }
+/* grid met max-content-kolommen: een korte naam houdt zijn breedte, de lange krijgt de rest en de ellipsis */
+.trap[data-courts="5"] .trede-team, .trap[data-courts="6"] .trede-team {
+  display: grid; grid-template-columns: minmax(0, max-content) minmax(0, max-content); align-items: baseline; gap: 0.5rem;
+  font-size: 2.3rem; padding: 0.5rem 1.2rem;
+}
+.trap[data-courts="5"] .trede-team--b, .trap[data-courts="6"] .trede-team--b { justify-content: end; padding-right: 1.6rem; }
+/* alleen de directe naam-spans: de bewegingsbadge (een geneste span) blijft inline, anders breekt de trap bij een wissel */
+.trap[data-courts="5"] .trede-team > span, .trap[data-courts="6"] .trede-team > span {
+  display: block; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.trap[data-courts="5"] .trede-team > span + span::before, .trap[data-courts="6"] .trede-team > span + span::before { content: "+ "; color: var(--fg-zacht); }
+.trap[data-courts="5"] .trede-score, .trap[data-courts="6"] .trede-score { font-size: 4rem; min-width: 10.5rem; gap: 0.8rem; }
+.trap[data-courts="5"] .trede-wacht, .trap[data-courts="6"] .trede-wacht { font-size: 1.75rem; }
+
+/* stand rechts, volledige hoogte */
+.tv-stand {
+  display: flex; flex-direction: column; min-height: 0; padding: 1.25rem 1.5rem 1.5rem;
+  border: 0.125rem solid var(--lijn); border-radius: 1.25rem;
+}
+.tv-stand h2 {
+  font-family: var(--f-label); font-weight: 700; font-size: 1.75rem; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--mosterd); padding: 0 0.9rem 0.75rem; border-bottom: 0.125rem solid var(--lijn); margin-bottom: 0.5rem;
+}
+.tv-stand ol { flex: 1; min-height: 0; display: grid; grid-auto-rows: minmax(0, 1fr); gap: 0.1rem; }
+.tv-stand ol[data-cols="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-flow: column; column-gap: 1rem; }
+/* de pijlkolom (1.5rem) is er altijd, ook leeg: niets verschuift als de rangpijlen verschijnen */
+.tv-stand li {
+  display: grid; grid-template-columns: 2.25rem 1.5rem minmax(0, 1fr) auto auto; gap: 0.75rem; align-items: center;
+  min-height: 2.2rem; padding: 0 0.9rem; border-radius: 999px; font-variant-numeric: tabular-nums;
+}
+/* de leider pas in mosterd als er een ronde gesloten is (app.js zet is-leider) */
+.tv-stand li.is-leider { background: var(--mosterd); color: var(--groen); }
+.tv-stand ol[data-cols="2"] li:first-child { grid-row: 1; }
+.tv-stand .rang { font-family: var(--f-label); font-weight: 700; font-size: 1.5rem; color: var(--fg-zacht); }
+.tv-stand li.is-leider .rang { color: var(--groen); }
+.tv-stand .naam { font-family: var(--f-label); font-weight: 600; font-size: 1.875rem; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* klein label: alleen het veld ("V3"), zodat een naam van 24 tekens past */
+.tv-stand .klein { font-family: var(--f-label); font-weight: 500; font-size: 1.25rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-zacht); white-space: nowrap; min-width: 2.2rem; text-align: right; }
+.tv-stand li.is-leider .klein { color: var(--groen); font-weight: 500; }
+.tv-stand .punten { font-family: var(--f-label); font-weight: 700; font-size: 2rem; line-height: 1; color: var(--mosterd); min-width: 3.2rem; text-align: right; }
+.tv-stand .punten--stil { color: var(--fg-zacht); }   /* setup: nog geen score, dus geen scorekleur */
+.tv-stand li.is-leider .punten { color: var(--groen); }
+/* twee kolommen: strakkere rij */
+.tv-stand ol[data-cols="2"] li { grid-template-columns: 1.6rem 1.25rem minmax(0, 1fr) auto auto; gap: 0.5rem; padding: 0 0.5rem; }
+.tv-stand ol[data-cols="2"] .naam { font-size: 1.75rem; }
+.tv-stand ol[data-cols="2"] .rang { font-size: 1.25rem; }
+.tv-stand ol[data-cols="2"] .klein { font-size: 1.1rem; min-width: 1.8rem; }
+.tv-stand ol[data-cols="2"] .punten { min-width: 2.4rem; font-size: 1.75rem; }
+
+/* qr-balk onder de treden */
+.tv-qr { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 2rem; }
+.tv-qr-code { width: 17.5rem; height: 17.5rem; padding: 0.75rem; border-radius: 1rem; background: var(--creme); }
+.tv-qr-code svg { width: 100%; height: 100%; }
+.tv-qr-tekst { display: grid; gap: 0.5rem; }
+.tv-qr-tekst h3 { font-family: var(--f-display); font-weight: 400; font-size: 2.4rem; line-height: 1.1; }
+.tv-qr-tekst .url { font-family: var(--f-label); font-weight: 600; font-size: 1.6rem; letter-spacing: 0.04em; color: var(--mosterd); overflow-wrap: anywhere; }
+.tv-lokaal {
+  display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1.25rem; border-radius: 999px; border: 0.125rem solid var(--lijn);
+  font-family: var(--f-label); font-weight: 600; font-size: 1.4rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-zacht);
+  justify-self: start;
+}
+/* status rechtsonder: alleen de wachtlijn (de ronde staat al in de pil) en de verbinding */
+.tv-status { display: grid; gap: 0.5rem; justify-items: end; text-align: right; }
+.tv-status .wacht { font-family: var(--f-label); font-weight: 700; font-size: 2rem; line-height: 1.1; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg); }
+.tv-status .verbinding { font-size: 1.1rem; font-family: var(--f-label); letter-spacing: 0.08em; text-transform: uppercase; }
+.tv-status .dot { width: 0.8rem; height: 0.8rem; }
+
+.tv-strepen { height: 2.25rem; margin: 0 -2.5rem; background: url("../assets/brand/escalano-clubstrepen-horizontaal.svg") left center / auto 100% repeat-x; }
+
+/* kroning: El Campeon / La Campeona, op de plaats van de treden */
+.kroning {
+  display: grid; align-content: center; justify-items: center; text-align: center; gap: 0.5rem;
+  border: 0.125rem solid var(--mosterd); border-radius: 1.25rem; padding: 1.5rem 2rem; min-height: 0; overflow: hidden;
+}
+.kroning img { width: 5rem; margin-bottom: 0.25rem; }
+.kroning-titel { font-family: var(--f-display); font-style: italic; font-size: 3rem; line-height: 1; color: var(--mosterd); }
+.kroning-naam { font-family: var(--f-label); font-weight: 700; font-size: 6.5rem; line-height: 1; overflow-wrap: anywhere; }
+.kroning-punten { font-family: var(--f-label); font-weight: 600; font-size: 2.25rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--mosterd); }
+.podium { display: flex; gap: 3rem; margin-top: 0.75rem; }
+.podium li { display: grid; justify-items: center; gap: 0.25rem; }
+.podium .rang { font-family: var(--f-label); font-weight: 700; font-size: 1.75rem; letter-spacing: 0.14em; color: var(--mosterd); }
+.podium .naam { font-family: var(--f-label); font-weight: 600; font-size: 2.5rem; line-height: 1; }
+.podium .punten { font-family: var(--f-label); font-weight: 600; font-size: 1.6rem; color: var(--mosterd); }
+
+/* ---------- premium laag (SPEC 9): iconen, beweging, bevestiging, stippen ---------- */
+
+.icoon { width: 1.25em; height: 1.25em; flex: 0 0 auto; }
+.pil-groep { display: grid; justify-items: end; gap: 4px; }
+/* de rondestippen: gevuld = gespeeld, open ring = bezig, zacht = nog te spelen */
+.stippen { display: flex; gap: 4px; padding-right: 4px; }
+.stip { display: block; width: 8px; height: 8px; border-radius: 50%; background: var(--lijn); }
+.stip.is-gespeeld { background: var(--groen); }
+.stip.is-bezig { background: transparent; box-shadow: inset 0 0 0 2px var(--groen); }
+
+/* de held: de naam van de avond klein, de beweging, dan de eigen zin */
+.held { display: grid; gap: 4px; }
+.held-naam { font-size: 12px; letter-spacing: 0.16em; }
+.beweging-zin { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 17px; line-height: 1.2; min-height: 24px; }
+.beweging {
+  display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%;
+  flex: 0 0 auto; vertical-align: middle;
+}
+.beweging .icoon { width: 16px; height: 16px; }
+.beweging--op { background: var(--mosterd); color: var(--groen); }
+.beweging--af { background: var(--roze); color: var(--groen); }
+.beweging--blijft { background: var(--groen); color: var(--creme); }
+
+/* ingegeven: het vinkje tekent zich in 300 ms, de score groot */
+.ingegeven { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 12px; align-items: center; }
+.ingegeven > div { display: grid; gap: 4px; }
+.ingegeven .groot { font-family: var(--f-label); font-weight: 700; font-size: 40px; line-height: 1; font-variant-numeric: tabular-nums; }
+.vink {
+  display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%;
+  background: var(--terra); color: var(--creme);
+}
+.vink .icoon { width: 32px; height: 32px; }
+.vink path { stroke-dasharray: 22; stroke-dashoffset: 0; }
+
+/* "Jij: 5e, 38 punten" */
+.jij { font-family: var(--f-label); font-weight: 600; font-size: 20px; }
+.jij-rang { font-weight: 700; font-size: 24px; }
+.jij-punten { color: var(--fg-zacht); }
+
+/* de rustige verbindingsregel: bij verlies terracotta (tekstvariant), nooit een modaal */
+.verbinding--kwijt { color: var(--terra-tekst); }
+
+/* beheer: links met Kopieer en Deel */
+.link-rij { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; align-items: center; padding: 4px 0; border-top: 1px solid var(--lijn-zacht); }
+.link-rij:first-child { border-top: 0; }
+.link-rij a { display: block; font-family: var(--f-body); font-size: 15px; font-weight: 500; overflow-wrap: anywhere; text-underline-offset: 3px; padding: 4px 0; }
+.link-rij a span { display: block; font-size: 13px; color: var(--fg-zacht); font-weight: 400; }
+.link-acties { display: flex; gap: 4px; }
+.knop--icoon { gap: 6px; padding: 6px 12px; }
+.knop--icoon .icoon { width: 20px; height: 20px; }
+.knop--icoon.is-klaar { background: var(--groen); border-color: var(--groen); color: var(--creme); }
+.knop--primair.knop--icoon { padding: 8px 20px; }
+.knop--primair.knop--icoon .icoon { width: 24px; height: 24px; }
+.rij--tussen { justify-content: space-between; }
+.rij--tussen > .knop { flex: 0 0 auto; }
+.teller { font-family: var(--f-label); font-weight: 600; font-size: 17px; letter-spacing: 0.04em; }
+.ronde-kop { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 12px; }
+
+/* beheer: een veld zonder score is het luidste element, een veld met score is stil */
+.kaart--open { border-color: var(--terra); border-width: 2px; }
+.kaart--stil { border-color: var(--lijn-zacht); }
+.kaart--stil .beheer-score { color: var(--fg-zacht); }
+.beheer-score.is-leeg {
+  display: inline-flex; align-items: center; min-height: 36px; padding: 4px 12px; border-radius: var(--r-pil);
+  border: 2px solid var(--terra); color: var(--terra-tekst); font-weight: 700; font-size: 14px; letter-spacing: 0.1em; text-transform: uppercase;
+}
+
+/* een bevestiging onder beheer: verschijnt, en vervaagt (is-weg) 300 ms voor app.js hem weghaalt; de JS houdt de tijd,
+   zodat een render tussendoor hem niet opnieuw op vol zet */
+.melding--toast { font-weight: 500; color: var(--fg); padding: 8px 12px; border-radius: var(--r-knop); background: var(--paneel); transition: opacity var(--traag) var(--ease); }
+.melding--toast.melding--fout { color: var(--terra-tekst); background: rgba(186, 75, 43, 0.08); }
+.melding--toast.is-weg { opacity: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .ingegeven.is-vers .vink path { animation: teken 300ms var(--ease) both; }
+  @keyframes teken { from { stroke-dashoffset: 22; } to { stroke-dashoffset: 0; } }
+  .ingegeven.is-vers .vink { animation: vinkpop 300ms var(--ease) both; }
+  @keyframes vinkpop { from { transform: scale(0.8); } to { transform: none; } }
+  /* de wissel naar de nieuwe opstelling: de held en dan de kaart verschijnen (een reeks, nooit twee kaarten over elkaar) */
+  .held.wissel { animation: verschijn var(--traag) var(--ease) both; }
+  .kaart.wissel { animation: verschijn var(--traag) var(--ease) both; animation-delay: 80ms; }
+  .melding--toast { animation: verschijn var(--snel) var(--ease) both; }
+}
+
+/* ---------- tv: de premium laag (puls, wissel, herkomst, tijd, kroning, toast) ---------- */
+
+/* een tijdblok onder de pil: klok en verstreken tijd, een stille maat (24 px) */
+.tv-pil-groep { justify-self: end; display: grid; justify-items: end; gap: 0.5rem; }
+.tv-tijd { display: flex; align-items: baseline; gap: 1.25rem; }
+.tv-sinds, .tv-klok { font-family: var(--f-label); font-weight: 600; font-size: 1.5rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg-zacht); white-space: nowrap; }
+.tv-status-rij { display: flex; align-items: center; gap: 1.25rem; }
+.tv-status .verbinding { color: var(--fg-zacht); }
+.tv-status .verbinding--kwijt { color: var(--fg); }   /* de pil draagt het alarm al; de regel moet leesbaar zijn (terra op groen is 2.4:1) */
+
+/* een score landt: de trede pulseert een keer (mosterd rand, 600 ms), de score verschijnt */
+.trede { transition: box-shadow var(--traag) var(--ease); }
+/* de herkomst, klein en stil onder "Speelt" (mosterd is de scorekleur, die blijft voor scores) */
+.trede-score--stapel { flex-direction: column; gap: 0.25rem; }
+.trede-van { font-family: var(--f-label); font-weight: 600; font-size: 1.1rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--fg-zacht); white-space: nowrap; }
+.trede-team .beweging { display: inline-flex; width: 1.6rem; height: 1.6rem; margin-right: 0.5rem; vertical-align: 0.25rem; }
+.trede-team .beweging .icoon { width: 1.1rem; height: 1.1rem; }
+.trap[data-courts="5"] .trede-team .beweging, .trap[data-courts="6"] .trede-team .beweging { width: 1.4rem; height: 1.4rem; margin-right: 0.35rem; vertical-align: 0.15rem; }
+
+/* de wissel: "Ronde 4 gespeeld" en alleen de klimmers in twee kolommen, dekkend over de treden (3 s, 4 s bij 20 of 24) */
+.tv-overlay {
+  position: absolute; inset: 0; z-index: 3; display: grid; align-content: center; justify-items: center; gap: 1.5rem;
+  padding: 1.5rem 2rem; border-radius: 1.25rem; background: var(--groen); border: 0.125rem solid var(--mosterd);
+  overflow: hidden;
+}
+.tv-overlay-titel { font-family: var(--f-display); font-weight: 400; font-size: 4rem; line-height: 1; color: var(--mosterd); }
+.tv-overlay-kop { font-family: var(--f-label); font-weight: 700; font-size: 1.5rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--fg-zacht); margin-top: -0.5rem; }
+.tv-bewegingen { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem 4rem; width: 100%; max-width: 64rem; }
+.tv-beweging { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 1rem; min-height: 3.2rem; }
+.tv-beweging .naam { font-family: var(--f-label); font-weight: 600; font-size: 2.5rem; line-height: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tv-beweging .beweging { width: 2.4rem; height: 2.4rem; }
+.tv-beweging .beweging .icoon { width: 1.6rem; height: 1.6rem; }
+.tv-beweging .naar { font-family: var(--f-label); font-weight: 600; font-size: 1.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mosterd); min-width: 6rem; text-align: right; }
+
+/* rangpijlen in de stand, 10 s na de wissel, in de kolom die er altijd is */
+.rang-pijl { display: inline-flex; align-items: center; justify-content: center; }
+.rang-pijl .icoon { width: 1.25rem; height: 1.25rem; }
+.rang-pijl.is-op { color: var(--mosterd); }
+.rang-pijl.is-af { color: var(--roze); }
+.rang-pijl.is-gelijk { color: var(--fg-zacht); }
+.tv-stand li.is-leider .rang-pijl { color: var(--groen); }
+
+/* setup: de QR groot, "Scan en zoek je naam" */
+.tv-qr--groot .tv-qr-code { width: 21rem; height: 21rem; }
+.tv-main[data-cols="2"] .tv-qr--groot .tv-qr-code { width: 17.5rem; height: 17.5rem; }
+
+/* de eenmalige toast: "Druk op f voor volledig scherm", buiten #app */
+.tv-toast {
+  position: fixed; left: 50%; bottom: 3.25rem; transform: translateX(-50%); z-index: 20;   /* boven de merkband (2.25rem) met lucht */
+  padding: 0.8rem 1.6rem; border-radius: var(--r-pil); background: var(--creme); color: var(--groen);
+  font-family: var(--f-label); font-weight: 600; font-size: 1.4rem; letter-spacing: 0.06em; text-transform: uppercase; white-space: nowrap;
+}
+.tv-toast.is-weg { opacity: 0; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .trede.is-geland { animation: puls 600ms var(--ease) both; }
+  @keyframes puls {
+    0% { box-shadow: 0 0 0 0 rgba(220, 165, 44, 0); }
+    30% { box-shadow: 0 0 0 0.4rem rgba(220, 165, 44, 0.95); }
+    100% { box-shadow: 0 0 0 0.125rem rgba(220, 165, 44, 0); }
+  }
+  .trede.is-geland .trede-score { animation: verschijnstil var(--traag) var(--ease) both; }
+  .trede.is-geland .trede-team.wint { animation: verschijnstil var(--traag) var(--ease) both; }
+  @keyframes verschijnstil { from { opacity: 0; } to { opacity: 1; } }
+  .tv-overlay { animation: overlay var(--ovl, 3s) var(--ease) both; }   /* app.js zet --ovl (3 s, 4 s bij 20 of 24 spelers) */
+  @keyframes overlay { 0% { opacity: 0; transform: translateY(0.5rem); } 10% { opacity: 1; transform: none; } 90% { opacity: 1; } 100% { opacity: 0; } }
+  .trap.is-nieuw { animation: verschijnstil 600ms var(--ease) both; }
+  /* de kroning onthult zich in 1,2 s: titel, naam, podium; de clubstrepen blijven stil (de onthulling is het moment) */
+  .kroning .onthul { animation: verschijn 400ms var(--ease) both; animation-delay: var(--d, 0ms); }
+  .tv-toast { animation: toastkomt var(--traag) var(--ease) both; transition: opacity var(--traag) var(--ease); }
+  @keyframes toastkomt { from { opacity: 0; transform: translate(-50%, 0.5rem); } to { opacity: 1; transform: translateX(-50%); } }
+}
+
+/* ---------- print: de QR-codes voor de veldbordjes (A4) ---------- */
+
+.print-qr { display: none; }
+@media print {
+  @page { size: A4; margin: 14mm; }
+  html, body { background: none; color: var(--groen); }
+  .app > *:not(.print-qr) { display: none !important; }
+  /* vier bordjes per A4 (twee rijen van circa 125 mm in 269 mm): 16 spelers = 5 kaarten = 2 bladen */
+  .print-qr { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8mm; }
+  .print-kaart {
+    break-inside: avoid; border: 0.6mm solid var(--groen); border-radius: 6mm; padding: 6mm; display: grid; gap: 3mm;
+    justify-items: center; text-align: center;
+  }
+  .print-kaart .veldnaam { font-family: var(--f-label); font-weight: 700; font-size: 26pt; letter-spacing: 0.08em; text-transform: uppercase; }
+  .print-kaart svg { width: 52mm; height: 52mm; }
+  .print-kaart .url { font-family: var(--f-label); font-size: 11pt; overflow-wrap: anywhere; }
+  .print-kaart .scan { font-family: var(--f-display); font-size: 15pt; }
+  .print-kaart img { width: 28mm; }
+}
+
+/* ---------- kleine schermen en voorkeuren ---------- */
+
+/* korte gsm-schermen (Safari met werkbalken, circa 390 x 664): de hele beslissing, "Toch niet" incluis, past boven de
+   vouw, ook als de eigen zin twee regels neemt. Alleen het ritme krimpt (4 px-raster), geen tikdoel onder 48 px. */
+@media (max-height: 700px) {
+  html[data-view="speler"] .pagina { padding-top: 4px; gap: 8px; }
+  html[data-view="speler"] .kaart { padding-top: 4px; gap: 4px; }
+  html[data-view="speler"] .kaart .blok { gap: 4px; }
+  html[data-view="speler"] .tegel { min-height: 100px; padding: 4px 8px; }
+  html[data-view="speler"] .tegel-cijfer { font-size: 40px; }
+}
+@media (max-width: 380px) {
+  .woordmerk { width: 160px; }
+  .pil { font-size: 14px; padding: 4px 12px; }
+  .tegel-cijfer { font-size: 40px; }
+  .titel { font-size: 26px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { transition: none !important; animation: none !important; }
+}

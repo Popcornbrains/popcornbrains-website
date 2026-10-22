@@ -1,0 +1,823 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Upcycle pop-up Ziggo Dome · Pommelien Thijs</title>
+<meta name="description" content="Voor het eerst in Nederland: de upcycle pop-up van Pommelien Thijs! Je brengt je eigen T-shirt, hoodie of blanco totebag mee naar Ziggo Dome. Wij geven het een tweede leven met een unieke Pommelien-print.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#E1C3DD">
+<meta name="color-scheme" content="light">
+<meta name="format-detection" content="telephone=no">
+<link rel="canonical" href="https://popcornbrains.com/pommelien-upcycle/">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="nl_NL">
+<meta property="og:title" content="Upcycle pop-up Ziggo Dome · Pommelien Thijs">
+<meta property="og:description" content="Voor het eerst in Nederland: de upcycle pop-up van Pommelien Thijs! Je brengt je eigen T-shirt, hoodie of blanco totebag mee naar Ziggo Dome. Wij geven het een tweede leven met een unieke Pommelien-print.">
+<meta property="og:url" content="https://popcornbrains.com/pommelien-upcycle/">
+<meta property="og:image" content="https://popcornbrains.com/pommelien-upcycle/assets/img/og.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Upcycle pop-up Ziggo Dome, zaterdag 7 november 2026">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/icons/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<script>
+/* ?qa: geen beweging (voor schermopnames), ?qa=open: ook alle vragen open. Anders, met beweging en waar
+   sticky werkt: het scrollmoment aan, nog vóór de eerste weergave (dus geen verspringing). */
+(function (d) {
+  if (/[?&]qa\b/.test(location.search)) d.className = "qa";
+  else if (window.matchMedia && matchMedia("(prefers-reduced-motion: no-preference)").matches &&
+           window.CSS && CSS.supports && CSS.supports("position", "sticky") && CSS.supports("height", "1svh") && !matchMedia("(forced-colors: active)").matches) d.className = "has-moment";
+})(document.documentElement);
+</script>
+<style>
+/* ==========================================================================
+   Upcycle pop-up Ziggo Dome (za 7 november 2026), de fanpagina van Pommelien Thijs.
+   Eén taak: begrijpen hoe het werkt en een timeslot kiezen. De prijs hangt als een
+   kledinglabel aan de titel: fast fashion heeft een prijskaartje, dit is een tweede leven.
+   Twee plekken, twee kleuren, overal dezelfde:
+     blauw = aan de ingang (12u00 tot 18u00, geen concertticket nodig)
+     pruim = binnen (vanaf 19u00, alleen met concertticket)
+   Nul externe aanvragen: geen lettertypes, scripts of embeds van buitenaf.
+   ========================================================================== */
+:root{
+  --pink:#E1C3DD;
+  --plum:#59113D;
+  --blue:#68A7BA;
+  --grey:#EDEDED;
+  --ink:#000000;
+  --paper:#FFFFFF;
+  --rule:rgba(0,0,0,.2);
+  --rule-strong:rgba(0,0,0,.85);
+
+  /* De letter van het toestel, en voor de koppen het zwaarste gewicht dat elk systeem heeft (SF Pro Black,
+     Segoe UI Black, Roboto Black): vet, zwart, op zachte kleur, zoals het merk. */
+  --font:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --heavy:900;
+
+  --s1:.5rem; --s2:.75rem; --s3:1rem; --s4:1.5rem; --s5:2rem; --s6:3rem; --s7:4.5rem;
+  --gutter:16px;
+  --col:42rem;
+  --wide:74rem;
+
+  --spring:cubic-bezier(.34,1.56,.64,1);
+  --out:cubic-bezier(.22,1,.36,1);
+  --float:drop-shadow(0 2px 2px rgba(89,17,61,.14)) drop-shadow(0 16px 20px rgba(89,17,61,.16));
+}
+@media (min-width:640px){ :root{ --gutter:32px; } }
+
+*,*::before,*::after{ box-sizing:border-box; }
+html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; }
+body{
+  margin:0; background:var(--pink); color:var(--ink);
+  font:400 1.0625rem/1.6 var(--font);
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+img,svg{ display:block; max-width:100%; height:auto; }
+a{ color:inherit; text-underline-offset:.18em; text-decoration-thickness:1px; -webkit-tap-highlight-color:transparent; }
+a:hover{ text-decoration-thickness:2px; }
+a:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; border-radius:2px; }
+p{ margin:0; }
+p, li, dd{ text-wrap:pretty; }
+.nw{ white-space:nowrap; }
+/* onder 320 px (bv. het buitenscherm van een vouwtoestel) mag alles weer afbreken */
+@media (max-width:319.98px){ .nw{ white-space:normal; } }
+[hidden]{ display:none !important; }
+
+/* links en rechts ook de notch van een liggende iPhone ontwijken */
+.wrap{ width:100%; max-width:var(--wide); margin:0 auto; padding:0 max(var(--gutter), env(safe-area-inset-right)) 0 max(var(--gutter), env(safe-area-inset-left)); }
+.band{ padding:var(--s7) 0; }
+.band--grey{ background:var(--grey); }
+.band--plum{ background:var(--plum); color:var(--paper); }
+
+/* ---- Koppen en kleine labels ----------------------------------------------- */
+.h2{
+  margin:0 0 var(--s4); font-weight:var(--heavy); text-transform:uppercase;
+  font-size:clamp(1.75rem, 7.2vw, 3rem); line-height:1; letter-spacing:0; text-wrap:balance;
+}
+.label{
+  margin:0 0 var(--s2); font-style:italic; font-weight:500; text-transform:uppercase;
+  font-size:.8125rem; letter-spacing:.06em;
+}
+.lede{ max-width:var(--col); font-size:1.1875rem; line-height:1.5; }
+
+/* ---- Knop: een wit vak met een zwarte rand en zwarte cursieve kapitalen, zoals op pommelienthijs.be */
+.btn{
+  display:flex; align-items:center; justify-content:center; width:100%; min-height:3.75rem;
+  padding:.75rem 1.5rem; border:2px solid var(--ink); background:var(--paper); color:var(--ink);
+  font:italic 600 1.0625rem/1.2 var(--font); text-transform:uppercase; letter-spacing:.05em;
+  text-align:center; text-decoration:none; cursor:pointer; -webkit-tap-highlight-color:transparent;
+  transition:transform .45s var(--spring), background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.btn:hover{ transform:translateY(-2px); background:var(--plum); border-color:var(--plum); color:var(--paper); text-decoration:none; }
+.btn:active{ transform:scale(.98); transition-duration:.12s; }
+.btn:focus-visible{ outline:3px solid var(--ink); outline-offset:3px; border-radius:0; }
+/* Nog geen boekingslink: zichtbaar, maar geen knop; ook bij hover verandert er niets */
+.btn[aria-disabled="true"]{ background:transparent; color:var(--ink); border-color:var(--ink); border-style:dashed; cursor:default; transform:none; }
+/* op pruim */
+.band--plum .btn{ border-color:var(--paper); }
+.band--plum .btn:hover{ background:var(--pink); border-color:var(--pink); color:var(--ink); }
+.band--plum .btn:focus-visible{ outline-color:var(--paper); }
+.band--plum .btn[aria-disabled="true"]{ background:transparent; border-color:var(--paper); color:var(--paper); }
+
+/* ==========================================================================
+   Hero: de signatuur, de titel, het label met de prijs, de knop
+   ========================================================================== */
+.hero{ position:relative; overflow:hidden; padding:max(var(--s5), env(safe-area-inset-top)) 0 var(--s6); }
+.hero .wrap{ display:grid; grid-template-columns:minmax(0,1fr); grid-template-areas:"sig" "title" "tag" "cta"; }
+.sig{ grid-area:sig; width:clamp(9rem, 40vw, 13rem); }
+.title{
+  grid-area:title; margin:var(--s5) 0 0; font-weight:var(--heavy);
+  font-size:clamp(3.4rem, 22vw, 9.5rem); line-height:.86; letter-spacing:-.03em;
+}
+/* elk woord op een eigen regel; met extra tekstafstand (WCAG 1.4.12) breekt een woord eerder af dan dat het wegvalt */
+.title span{ display:block; overflow-wrap:anywhere; }
+
+/* Het label hangt aan een draadje onder de titel; draad en kaartje draaien samen rond het ophangpunt */
+.hang{ --drop:2.75rem; grid-area:tag; justify-self:start; width:min(21rem, 90%); margin:0 0 var(--s5) 5%; filter:var(--float); }
+.tag{ position:relative; padding-top:var(--drop); transform:rotate(-2.5deg); transform-origin:50% 0; }
+/* het draadje loopt van het ophangpunt tot het midden van het oogje (.65rem + .55rem onder de kaartrand) */
+.tag__string{ position:absolute; z-index:1; top:0; left:50%; width:2px; margin-left:-1px; height:calc(var(--drop) + 1.2rem); background:var(--plum); border-radius:1px; }
+/* bovenaan het T-staafje waarmee een label aan een kledingstuk vastzit */
+.tag__string::before{ content:""; position:absolute; top:-1px; left:50%; width:.8rem; height:3px; margin-left:-.4rem; background:var(--plum); border-radius:2px; }
+.tag__card{
+  position:relative; background:var(--grey); padding:2.6rem 1.25rem 1.4rem;
+  clip-path:polygon(2.25rem 0, calc(100% - 2.25rem) 0, 100% 2.25rem, 100% 100%, 0 100%, 0 2.25rem);
+}
+.tag__eyelet{
+  position:absolute; top:.65rem; left:50%; width:1.1rem; height:1.1rem; margin-left:-.55rem;
+  border-radius:50%; background:var(--pink); box-shadow:inset 0 0 0 2px var(--plum);
+}
+.tag__when{ font-style:italic; font-size:1rem; line-height:1.35; }
+.tag__price{ margin:.35rem 0 .6rem; font-weight:var(--heavy); font-size:clamp(2.25rem, 10vw, 2.75rem); line-height:1; letter-spacing:-.02em; }
+.tag__bring{ padding-top:.7rem; border-top:1px solid var(--rule); font-size:1rem; line-height:1.4; }
+
+.hero .btn{ grid-area:cta; }
+/* tablet: het draadje vertrekt onder de staarten van "pop-up" */
+@media (min-width:600px) and (max-width:959.98px){ .hang{ margin-top:1.75rem; } }
+/* korte gsm-schermen (iPhone SE en kleiner): alles van de essentie, ook de knop, blijft boven de vouw */
+@media (max-width:599.98px) and (max-height:700px){
+  .hero{ padding-top:max(var(--s4), env(safe-area-inset-top)); padding-bottom:var(--s5); }
+  .sig{ width:clamp(7.5rem, 33vw, 9rem); }
+  .title{ margin-top:var(--s3); font-size:clamp(3rem, 18vw, 5rem); }
+  .hang{ --drop:2rem; margin-top:.375rem; margin-bottom:var(--s4); }
+  .tag__card{ padding-top:2.25rem; padding-bottom:1.1rem; }
+  .tag__price{ font-size:2.125rem; margin:.25rem 0 .45rem; }
+  .tag__bring{ padding-top:.5rem; }
+  .hero .btn{ min-height:3.4rem; }
+}
+@media (min-width:600px){ .hero .btn, .book .btn{ max-width:28rem; } }
+/* 320 px: de knoptekst op één regel */
+@media (max-width:359.98px){ .btn{ padding:.75rem 1rem; font-size:.9375rem; letter-spacing:.03em; } }
+
+/* ==========================================================================
+   Intro, "Want: Fuck Fast Fashion." en het kader
+   ========================================================================== */
+.intro{ padding:var(--s4) 0 var(--s5); }
+.manifest{
+  margin:0; font-weight:var(--heavy); color:var(--plum);
+  font-size:clamp(2.4rem, 11.5vw, 6rem); line-height:.92; letter-spacing:-.03em; text-wrap:balance;
+}
+.facts{ display:grid; gap:var(--s6); }
+.kader{ max-width:var(--col); border:2px solid var(--ink); padding:var(--s4) var(--s4) var(--s3); }
+
+/* ==========================================================================
+   Het scrollmoment: "Want: Fuck Fast Fashion."
+   Zonder script, met "Beperk beweging" of met ?qa: gewoon de zin, pruim op roze.
+   Met beweging (html.has-moment, gezet in de head): het scherm zet zich vast voor ±één duimveeg,
+   een pruimen pers zakt van boven over het beeld (wat hij raakt, kleurt roze) en daarna worden
+   "Fuck", "Fast" en "Fashion." er één voor één op gedrukt. Het script zet enkel --fill en --w2..--w4;
+   enkel transform, opacity en clip-path bewegen.
+   ========================================================================== */
+.moment{ padding:0 0 var(--s7); }
+.moment__ink, .moment__layer--print{ display:none; }
+@media screen{
+.has-moment .moment{ position:relative; height:180vh; height:calc(100lvh + 80svh); padding:0; }
+.has-moment .moment__pin{ position:sticky; top:0; height:100vh; height:100lvh; overflow:hidden; }
+.has-moment .moment__layer{ position:absolute; inset:0; display:flex; align-items:center; padding-bottom:calc(100lvh - 100svh); }
+.has-moment .moment__ink{ display:block; position:absolute; inset:0; background:var(--plum); transform:scaleY(var(--fill, 0)); transform-origin:50% 0; }
+.has-moment .moment__layer--print{ display:flex; clip-path:inset(0 0 calc((1 - var(--fill, 0)) * 100%) 0); }
+.has-moment .moment .manifest{ font-size:min(clamp(3.25rem, min(18vw, 19svh), 11rem), 24svh); line-height:.88; }
+.has-moment .moment .w{ display:block; }
+/* de leesbare laag toont enkel "Want:"; de andere woorden blijven voor schermlezers gewoon in de zin */
+.has-moment .moment__layer:not(.moment__layer--print) .w + .w{ opacity:0; }
+.has-moment .moment__layer--print .manifest{ color:var(--pink); }
+.has-moment .moment__layer--print .w::before{ content:attr(data-w); }
+.has-moment .moment__layer--print .w:nth-child(2){ --w:var(--w2, 0); }
+.has-moment .moment__layer--print .w:nth-child(3){ --w:var(--w3, 0); }
+.has-moment .moment__layer--print .w:nth-child(4){ --w:var(--w4, 0); }
+.has-moment .moment__layer--print .w + .w{ opacity:var(--w); transform:scale(calc(1.14 - .14 * var(--w))); transform-origin:0 60%; }
+}
+.kader dl{ margin:0 0 var(--s2); display:grid; grid-template-columns:auto minmax(0,1fr); column-gap:.4em; row-gap:.15rem; }
+.kader dl div{ display:contents; }
+.kader dt{ font-weight:700; }
+.kader dd{ margin:0; }
+.kader p{ padding:var(--s2) 0; border-top:1px solid var(--rule); }
+
+/* ==========================================================================
+   Hoe bestellen: zeven stappen, de volgorde telt
+   ========================================================================== */
+.steps{ list-style:none; margin:0; padding:0; counter-reset:stap; max-width:var(--col); }
+.steps li{
+  counter-increment:stap; display:grid; grid-template-columns:2.75rem minmax(0,1fr); column-gap:var(--s3);
+  padding:var(--s3) 0; border-top:1px solid var(--rule);
+}
+.steps li:last-child{ border-bottom:1px solid var(--rule); }
+.steps li::before{
+  content:counter(stap); font-weight:var(--heavy); color:var(--plum);
+  font-size:2.25rem; line-height:.9; letter-spacing:-.02em;
+}
+
+/* ==========================================================================
+   Waar afgeven en afhalen: twee plekken, het plannetje, de tabel
+   ========================================================================== */
+.places{ display:grid; gap:var(--s3); margin:var(--s5) 0; }
+.place{ background:var(--grey); border-top:.6rem solid var(--spot); padding:var(--s4); }
+.place--ingang{ --spot:var(--blue); }
+.place--binnen{ --spot:var(--plum); }
+.place h3{ margin:0 0 var(--s2); font-weight:var(--heavy); text-transform:uppercase; font-size:1.5rem; line-height:1.05; letter-spacing:0; text-wrap:balance; }
+.place__meta{ display:flex; flex-wrap:wrap; gap:.4rem; margin:0 0 var(--s3); }
+/* geen hoofdletters: "12u00" moet "12u00" blijven */
+.chip{
+  display:inline-block; padding:.2rem .55rem; border:1.5px solid var(--ink);
+  font-style:italic; font-weight:500; font-size:.875rem; line-height:1.3;
+}
+/* "Ja" bij concertticket: pruim, de kleur van binnen = met concertticket */
+.chip--ja{ background:var(--plum); border-color:var(--plum); color:var(--paper); font-style:normal; font-weight:700; font-size:1rem; padding:.05rem .5rem; }
+
+/* het plannetje */
+.plan{ margin:var(--s5) 0; max-width:28rem; }
+.plan svg{ width:100%; height:auto; overflow:visible; }
+.plan text{ font-family:var(--font); fill:var(--ink); }
+.plan .t-b{ font-weight:var(--heavy); font-size:18px; }
+.plan .t-s{ font-size:16px; }
+.plan .t-l{ font-style:italic; font-weight:500; font-size:13px; letter-spacing:.06em; text-transform:uppercase; }
+/* op een gsm schaalt de tekening kleiner: de labels groeien wat mee */
+@media (max-width:479.98px){ .plan .t-s{ font-size:17px; } .plan .t-b{ font-size:19px; } .plan .t-l{ font-size:14px; } }
+
+/* kleurcode in tabel en plan */
+.sw{ display:inline-block; width:.8em; height:.8em; margin-right:.45em; vertical-align:-.02em; border:1.5px solid var(--ink); background:var(--c); }
+.sw--ingang{ --c:var(--blue); }
+.sw--binnen{ --c:var(--plum); }
+
+/* De tabel: op een gsm en tablet wordt elk timeslot een kaartje, vanaf 900px een echte tabel */
+.slots{ margin:var(--s5) 0 var(--s4); }
+.slots table{ width:100%; border-collapse:collapse; }
+.slots thead{ display:none; }
+.slots tbody{ display:grid; gap:var(--s2); }
+.slots tr{ display:block; background:var(--grey); padding:var(--s3) var(--s4) .4rem; }
+.slots th[scope="row"]{ display:block; text-align:left; font-weight:var(--heavy); font-size:1.375rem; letter-spacing:0; padding:0 0 .35rem; }
+.slots th[scope="row"]::before{ content:attr(data-label); display:block; margin-bottom:.15rem; font-style:italic; font-weight:500; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; }
+.slots td{ display:grid; grid-template-columns:5.5rem minmax(0,1fr); column-gap:var(--s2); padding:.45rem 0; border-top:1px solid var(--rule); line-height:1.45; }
+.slots td::before{ content:attr(data-label); font-style:italic; font-weight:500; font-size:.75rem; letter-spacing:.04em; text-transform:uppercase; padding-top:.2em; }
+/* het kleurblokje hangt voor de tekst: een tweede regel begint onder de tekst, niet onder het blokje */
+.slots td > span:not(.chip){ position:relative; display:block; padding-left:1.3em; }
+.slots td > span > .sw{ position:absolute; left:0; top:.3em; margin:0; }
+/* de laatste rij: label en antwoord op één lijn */
+.slots td:last-child{ display:flex; flex-wrap:wrap; align-items:baseline; column-gap:var(--s2); }
+@media (min-width:640px) and (max-width:899.98px){ .slots tbody{ grid-template-columns:1fr 1fr; } }
+@media (min-width:900px){
+  .slots thead{ display:table-header-group; }
+  .slots tbody{ display:table-row-group; }
+  .slots tr{ display:table-row; background:none; padding:0; }
+  .slots th, .slots td{ display:table-cell; padding:.85rem var(--s3) .85rem 0; border-top:1px solid var(--rule); text-align:left; vertical-align:top; }
+  .slots td::before, .slots th[scope="row"]::before{ content:none; }
+  .slots td:last-child{ display:table-cell; }
+  .slots thead th{ border-top:0; border-bottom:2px solid var(--ink); font-style:italic; font-weight:500; font-size:.8125rem; letter-spacing:.04em; text-transform:uppercase; padding-bottom:.6rem; }
+  .slots th[scope="row"]{ display:table-cell; font-size:1.125rem; line-height:1.45; padding:.85rem var(--s3) .85rem 0; white-space:nowrap; }
+  .slots tbody tr:last-child > *{ border-bottom:1px solid var(--rule); }
+}
+
+.after{ max-width:var(--col); }
+
+/* Opgelet: blauw, de kleur van de plek aan de ingang, want daar gaat het over */
+.opgelet{
+  position:relative; max-width:var(--col); margin:var(--s5) 0 0; padding:var(--s4) var(--s4) var(--s4) 4.25rem;
+  background:var(--blue); border:2px solid var(--ink);
+}
+.opgelet::before{
+  content:"!"; content:"!" / ""; position:absolute; left:var(--s4); top:var(--s4);
+  font-weight:var(--heavy); font-size:2.5rem; line-height:.9;
+}
+/* 320 px: minder vaste ruimte voor het uitroepteken en de stapnummers */
+@media (max-width:359.98px){
+  .opgelet{ padding-left:3rem; }
+  .opgelet::before{ left:var(--s3); }
+  .steps li{ grid-template-columns:1.75rem minmax(0,1fr); column-gap:var(--s2); }
+}
+
+/* ==========================================================================
+   Kies hier je timeslot
+   ========================================================================== */
+.book .wrap{ display:grid; gap:var(--s4); }
+.book .h2{ margin:0; }
+.book p{ max-width:var(--col); font-size:1.1875rem; line-height:1.5; }
+.book a:not(.btn):focus-visible{ outline-color:var(--paper); }
+
+/* ==========================================================================
+   Veelgestelde vragen
+   ========================================================================== */
+.faq__list{ max-width:var(--col); border-top:2px solid var(--ink); }
+.faq details{ border-bottom:1px solid var(--rule-strong); }
+/* een blok, geen flex: Safari vóór versie 17 negeert flex op een summary; het teken staat absoluut rechts */
+.faq summary{
+  position:relative; display:block; min-height:3.75rem; padding:1.125rem 2.75rem 1.125rem 0;
+  cursor:pointer; list-style:none; font-weight:700; font-size:1.0625rem; line-height:1.35;
+  -webkit-tap-highlight-color:transparent;
+}
+.faq summary > span{ display:block; text-wrap:balance; }
+.faq summary::-webkit-details-marker{ display:none; }
+.faq summary::after{
+  content:"+"; content:"+" / ""; position:absolute; right:0; top:50%; margin-top:-.5em;
+  font-weight:400; font-size:1.75rem; line-height:1; transition:transform .35s var(--out);
+}
+.faq details[open] summary::after{ transform:rotate(45deg); }
+.faq summary:hover{ color:var(--plum); }
+.faq summary:focus-visible{ outline:2px solid var(--ink); outline-offset:2px; }
+.faq__a{ padding:0 0 var(--s4); display:grid; gap:var(--s2); }
+.faq__a ul{ margin:0; padding:0 0 0 1.1rem; display:grid; gap:.35rem; }
+.faq__a li::marker{ color:var(--plum); }
+.ask{ max-width:var(--col); margin-top:var(--s5); }
+.ask h3{ margin:0 0 var(--s1); font-weight:700; font-size:1.375rem; }
+/* tekstlinks: een grotere tikzone via een onzichtbaar vlak, zodat de focusring strak rond de tekst blijft */
+.book p a, .ask a, .foot a{ position:relative; }
+.book p a::after, .ask a::after, .foot a::after{ content:""; position:absolute; left:0; right:0; top:-.75rem; bottom:-.75rem; }
+
+/* ==========================================================================
+   Footer
+   ========================================================================== */
+.foot{ padding:var(--s6) 0 max(var(--s6), env(safe-area-inset-bottom)); font-size:.9375rem; line-height:1.55; }
+.foot .wrap{ display:grid; gap:var(--s2); }
+.foot p{ max-width:var(--col); }
+.foot__who{ font-weight:700; }
+
+/* ==========================================================================
+   Breed scherm
+   ========================================================================== */
+@media (min-width:760px) and (max-width:959.98px){ .plan{ max-width:calc(50% - .5rem); } }
+@media (min-width:760px){
+  .places{ grid-template-columns:1fr 1fr; }
+  /* twee kolommen met rijen op dezelfde hoogte: stap 1-4 links, 5-7 rechts */
+  .steps{ max-width:none; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); grid-template-rows:repeat(4,auto); grid-auto-flow:column; column-gap:var(--s6); }
+  .steps li:nth-child(4){ border-bottom:1px solid var(--rule); }
+}
+@media (min-width:960px){
+  .band{ padding:6rem 0; }
+  .hero{ padding-bottom:var(--s7); }
+  .hero .wrap{ grid-template-columns:minmax(0,1.25fr) minmax(0,1fr); grid-template-areas:"sig tag" "title tag" "cta tag"; column-gap:var(--s6); align-items:start; }
+  /* de titel schaalt mee met zijn kolom, zodat het label hem nooit raakt (vanaf 1280px: 9.5rem) */
+  .title{ font-size:min(9.5rem, 11.875vw); }
+  .hero .btn{ max-width:26rem; margin-top:var(--s6); }
+  /* breed: het label hangt van de bovenrand van het scherm */
+  .hang{ --drop:9.5rem; justify-self:center; width:min(24rem, 100%); margin:calc(-1 * max(var(--s5), env(safe-area-inset-top))) 0 0; }
+  .tag__string::before{ content:none; }
+  .tag__card{ padding:2.9rem 1.6rem 1.7rem; }
+  .tag__when, .tag__bring{ font-size:1.125rem; }
+  .tag__price{ font-size:3.25rem; }
+
+  .intro .lede{ max-width:48rem; font-size:1.5rem; line-height:1.45; }
+  /* het kader naast de stappen; de stappen in één kolom */
+  .facts{ grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr); column-gap:var(--s6); align-items:start; }
+  .facts .kader{ margin-top:.35rem; }
+  .facts .steps{ grid-template-columns:minmax(0,1fr); grid-template-rows:none; grid-auto-flow:row; }
+  .facts .steps li:nth-child(4){ border-bottom:0; }
+
+  .where__grid{ display:grid; grid-template-columns:minmax(0,1fr) min(28rem, 50%); column-gap:var(--s6); align-items:start; margin:var(--s5) 0; }
+  .where__grid .places{ grid-template-columns:1fr; margin:0; }
+  .where__grid .plan{ margin:0; }
+
+  .notes{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); column-gap:var(--s6); align-items:start; }
+  .notes .opgelet{ margin:0; }
+
+  .book .wrap{ grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); column-gap:var(--s6); row-gap:var(--s3); align-items:center; }
+  .book .h2, .book p{ grid-column:1; }
+  .book .btn{ grid-column:2; grid-row:1 / span 2; max-width:none; }
+
+  .faq .wrap{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.7fr); column-gap:var(--s6); align-items:start; }
+  .faq .label{ grid-column:1; grid-row:1; }
+  .faq .h2{ grid-column:1; grid-row:2; font-size:clamp(1.75rem, 3.6vw, 3rem); }
+  .faq__list{ grid-column:2; grid-row:1 / span 4; max-width:none; }
+  /* zoals in de doc: "Nog een vraag?" na de laatste vraag */
+  .ask{ grid-column:2; grid-row:5; }
+}
+
+/* ==========================================================================
+   Beweging: het label komt binnen en zwaait uit, de rest staat stil
+   ========================================================================== */
+@media (prefers-reduced-motion:no-preference){
+  .title span{ animation:rise .8s var(--out) both; }
+  .title span + span{ animation-delay:.08s; }
+  .tag{ animation:swing 1.6s var(--out) .25s both; }
+  /* aanraken (muis of vinger) laat het label één keer zwaaien; het script zet .nudge op .hang,
+     zodat de binnenkomst van .tag nooit herstart */
+  .hang{ transform-origin:50% 0; }
+  .hang.nudge{ animation:nudge .9s var(--out); }
+}
+@keyframes rise{ from{ opacity:0; transform:translateY(.25em); } to{ opacity:1; transform:none; } }
+@keyframes swing{
+  0%{ opacity:0; transform:rotate(-14deg); }
+  18%{ opacity:1; }
+  45%{ transform:rotate(3deg); }
+  70%{ transform:rotate(-4deg); }
+  100%{ transform:rotate(-2.5deg); }
+}
+@keyframes nudge{ 0%,100%{ transform:none; } 35%{ transform:rotate(4deg); } 70%{ transform:rotate(-1.5deg); } }
+html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; transition:none !important; }
+
+@media (forced-colors:active){
+  .btn{ border:2px solid ButtonText; }
+  .sw{ forced-color-adjust:none; }
+  /* zwarte inkt van de signatuur en het plannetje blijft leesbaar op een roze tegel */
+  .sig, .plan svg{ forced-color-adjust:none; background:var(--pink); }
+}
+</style>
+</head>
+<body>
+
+<main>
+
+<header class="hero">
+  <div class="wrap">
+    <img class="sig" src="assets/img/signatuur.png" width="660" height="189" alt="Pommelien Thijs">
+    <h1 class="title"><span>Upcycle</span> <span>pop-up</span></h1>
+    <div class="hang">
+      <div class="tag">
+        <span class="tag__string" aria-hidden="true"></span>
+        <div class="tag__card">
+          <span class="tag__eyelet" aria-hidden="true"></span>
+          <p class="tag__when">zaterdag <span class="nw">7 november 2026</span>, Ziggo&nbsp;Dome</p>
+          <p class="tag__price">€25 per item</p>
+          <p class="tag__bring">Breng je eigen <span class="nw">T-shirt</span>, hoodie of blanco totebag mee</p>
+        </div>
+      </div>
+    </div>
+    <a class="btn" data-book aria-disabled="true">Boeken opent binnenkort</a>
+  </div>
+</header>
+
+  <section class="intro">
+    <div class="wrap">
+      <p class="lede">Voor het eerst in Nederland: de upcycle <span class="nw">pop-up</span> van Pommelien Thijs! Je brengt je eigen <span class="nw">T-shirt</span>, hoodie of blanco totebag mee naar Ziggo&nbsp;Dome. Wij geven het een tweede leven met een unieke <span class="nw">Pommelien-print.</span></p>
+    </div>
+  </section>
+
+  <!-- Het scrollmoment. Zonder beweging is dit gewoon de zin. Met beweging zakt er een pruimen pers over het
+       scherm en worden de woorden erop gedrukt; de tweede laag is enkel beeld (aria-hidden). -->
+  <div class="moment" data-moment>
+    <div class="moment__pin">
+      <div class="moment__layer">
+        <div class="wrap"><p class="manifest"><span class="w">Want:</span> <span class="w">Fuck</span> <span class="w">Fast</span> <span class="w">Fashion.</span></p></div>
+      </div>
+      <div class="moment__ink" aria-hidden="true"></div>
+      <div class="moment__layer moment__layer--print" aria-hidden="true">
+        <div class="wrap"><p class="manifest"><span class="w" data-w="Want:"></span> <span class="w" data-w="Fuck"></span> <span class="w" data-w="Fast"></span> <span class="w" data-w="Fashion."></span></p></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="band band--grey">
+    <div class="wrap facts">
+      <div class="kader">
+        <dl>
+          <div><dt>Wanneer:</dt><dd>zaterdag <span class="nw">7 november</span> 2026</dd></div>
+          <div><dt>Prijs:</dt><dd>€25 per item.</dd></div>
+        </dl>
+        <p>Zonder timeslot, geen print. Eén reservering&nbsp;=&nbsp;één item.</p>
+        <p>Snel zijn loont: van elke print hebben we maar een beperkt aantal. Op&nbsp;=&nbsp;op.</p>
+        <p>Geen concertticket? Je bent ook welkom! Boek dan een timeslot tussen <span class="nw">12u00</span> en <span class="nw">16u00</span>.</p>
+      </div>
+      <section class="order" aria-labelledby="hoe">
+      <h2 class="h2" id="hoe">Hoe bestellen?</h2>
+      <ol class="steps" role="list">
+        <li><p>Kies hieronder je timeslot. Dit is het uur waarop je je item komt afgeven. Je betaalt meteen online.</p></li>
+        <li><p>Check je mailbox, daar zit je bevestiging. Niks gezien? Kijk even in je spam.</p></li>
+        <li><p>Op 7 november kom je tijdens je timeslot naar de <span class="nw">pop-up</span>, met je item en je bevestigingsmail. Waar? Dat hangt af van je timeslot: kijk in de tabel hieronder.</p></li>
+        <li><p>Zeg je naam aan de balie. Je krijgt een nummer. Maak er meteen een foto van, want met dat nummer haal je je item af.</p></li>
+        <li><p>Kies je favoriete print. Wie eerst komt, heeft de meeste keuze.</p></li>
+        <li><p>Wij gaan aan de slag. Jij hoeft niet te wachten: ga gerust iets eten of drinken.</p></li>
+        <li><p>Op het afgesproken uur kom je je item afhalen (kijk tabel hieronder).</p></li>
+      </ol>
+      </section>
+    </div>
+  </div>
+
+  <section class="band where" aria-labelledby="waar">
+    <div class="wrap">
+      <h2 class="h2" id="waar">Waar afgeven en afhalen?</h2>
+      <p class="lede">Je vindt ons op twee plekken. Waar je moet zijn, hangt af van je timeslot.</p>
+
+      <div class="where__grid">
+      <div class="places">
+        <div class="place place--ingang">
+          <h3>Aan de ingang</h3>
+          <p class="place__meta"><span class="chip">van 12u00 tot 18u00</span> <span class="chip">geen concertticket nodig</span></p>
+          <p>Aan de ingang van Ziggo&nbsp;Dome, links van de grote trap, op de begane grond.</p>
+        </div>
+        <div class="place place--binnen">
+          <h3>Binnen</h3>
+          <p class="place__meta"><span class="chip">vanaf 19u00</span> <span class="chip">alleen met concertticket</span></p>
+          <p>In de entreehal van Ziggo&nbsp;Dome, naast de merchandise, bij de <span class="nw">Noord-trap</span>.</p>
+        </div>
+      </div>
+
+      <!-- Eigen schema op basis van de plattegrond van de zaal, niet op schaal. -->
+      <figure class="plan">
+        <svg viewBox="18 0 364 372" role="img" aria-labelledby="plan-t" aria-describedby="plan-d">
+          <title id="plan-t">Plannetje van de ingang van Ziggo Dome</title>
+          <desc id="plan-d">Aan de ingang: links van de grote trap, op de begane grond, van 12u00 tot 18u00. Binnen: in de entreehal, naast de merchandise, bij de Noord-trap, vanaf 19u00.</desc>
+          <defs>
+            <marker id="pijl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0 L10 5 L0 10 z" fill="#000"/>
+            </marker>
+          </defs>
+          <text class="t-l" x="20" y="17">Begane grond</text>
+          <!-- gebouw: links, achter, rechts; de gevel apart, met de deuren -->
+          <rect x="20" y="28" width="360" height="262" fill="#EDEDED"/>
+          <rect x="20" y="236" width="360" height="54" fill="#FFFFFF"/>
+          <path d="M20 290 V28 H380 V290" fill="none" stroke="#000" stroke-width="2.5"/>
+          <path d="M20 290 H96 M112 290 H136 M152 290 H176 M192 290 H216 M232 290 H256 M272 290 H296 M312 290 H380" fill="none" stroke="#000" stroke-width="2.5"/>
+          <path d="M20 236 H380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="2 5"/>
+          <!-- twee trappen naar de ring, met de merchandise ernaast -->
+          <g fill="#FFFFFF" stroke="#000" stroke-width="1.5">
+            <rect x="32" y="40" width="40" height="56"/>
+            <rect x="328" y="40" width="40" height="56"/>
+            <rect x="80" y="72" width="54" height="18"/>
+            <rect x="266" y="72" width="54" height="18"/>
+          </g>
+          <path d="M32 47h40M32 54h40M32 61h40M32 68h40M32 75h40M32 82h40M32 89h40M328 47h40M328 54h40M328 61h40M328 68h40M328 75h40M328 82h40M328 89h40" stroke="#000" stroke-width="1"/>
+          <text class="t-s" x="370" y="118" text-anchor="end">Noord-trap</text>
+          <text class="t-s" x="320" y="62" text-anchor="end">merchandise</text>
+          <!-- de grote trap, buiten, rechts van de deuren -->
+          <rect x="334" y="298" width="46" height="58" fill="#FFFFFF" stroke="#000" stroke-width="1.5"/>
+          <path d="M334 305h46M334 312h46M334 319h46M334 326h46M334 333h46M334 340h46M334 347h46" stroke="#000" stroke-width="1"/>
+          <text class="t-s" x="326" y="354" text-anchor="end">grote trap</text>
+          <!-- ingang -->
+          <path d="M200 358 V300" stroke="#000" stroke-width="2" marker-end="url(#pijl)"/>
+          <text class="t-s" x="190" y="338" text-anchor="end">ingang</text>
+          <!-- de twee plekken -->
+          <rect x="300" y="250" width="24" height="24" fill="#68A7BA" stroke="#000" stroke-width="1.5"/>
+          <rect x="250" y="100" width="24" height="24" fill="#59113D" stroke="#000" stroke-width="1.5"/>
+          <text class="t-b" x="34" y="259">Aan de ingang</text>
+          <text class="t-s" x="34" y="279">12u00-18u00</text>
+          <path d="M188 262 H294" stroke="#000" stroke-width="1.5" marker-end="url(#pijl)"/>
+          <text class="t-b" x="34" y="130">Binnen</text>
+          <text class="t-s" x="34" y="150">vanaf 19u00</text>
+          <path d="M116 124 C166 124 200 112 244 112" fill="none" stroke="#000" stroke-width="1.5" marker-end="url(#pijl)"/>
+        </svg>
+      </figure>
+      </div>
+
+      <div class="slots">
+        <table role="table">
+          <thead role="rowgroup">
+            <tr role="row">
+              <th scope="col" role="columnheader">Jouw timeslot</th>
+              <th scope="col" role="columnheader">Afgeven</th>
+              <th scope="col" role="columnheader">Afhalen</th>
+              <th scope="col" role="columnheader">Concertticket nodig?</th>
+            </tr>
+          </thead>
+          <tbody role="rowgroup">
+            <tr role="row">
+              <th scope="row" role="rowheader" data-label="Jouw timeslot">12u00-13u00</th>
+              <td role="cell" data-label="Afgeven"><span><i class="sw sw--ingang" aria-hidden="true"></i>Aan de ingang</span></td>
+              <td role="cell" data-label="Afhalen"><span><i class="sw sw--ingang" aria-hidden="true"></i>Aan de ingang, van 14u00 tot 17u30</span></td>
+              <td role="cell" data-label="Concertticket nodig?">Nee</td>
+            </tr>
+            <tr role="row">
+              <th scope="row" role="rowheader" data-label="Jouw timeslot">13u00-14u00</th>
+              <td role="cell" data-label="Afgeven"><span><i class="sw sw--ingang" aria-hidden="true"></i>Aan de ingang</span></td>
+              <td role="cell" data-label="Afhalen"><span><i class="sw sw--ingang" aria-hidden="true"></i>Aan de ingang, van 15u00 tot 17u30</span></td>
+              <td role="cell" data-label="Concertticket nodig?">Nee</td>
+            </tr>
+            <tr role="row">
+              <th scope="row" role="rowheader" data-label="Jouw timeslot">14u00-15u00</th>
+              <td role="cell" data-label="Afgeven"><span><i class="sw sw--ingang" aria-hidden="true"></i>Aan de ingang</span></td>
+              <td role="cell" data-label="Afhalen"><span><i class="sw sw--ingang" aria-hidden="true"></i>Aan de ingang, van 16u00 tot 17u30</span></td>
+              <td role="cell" data-label="Concertticket nodig?">Nee</td>
+            </tr>
+            <tr role="row">
+              <th scope="row" role="rowheader" data-label="Jouw timeslot">15u00-16u00</th>
+              <td role="cell" data-label="Afgeven"><span><i class="sw sw--ingang" aria-hidden="true"></i>Aan de ingang</span></td>
+              <td role="cell" data-label="Afhalen"><span><i class="sw sw--ingang" aria-hidden="true"></i>Aan de ingang, van 17u00 tot 17u30</span></td>
+              <td role="cell" data-label="Concertticket nodig?">Nee</td>
+            </tr>
+            <tr role="row">
+              <th scope="row" role="rowheader" data-label="Jouw timeslot">16u00-17u00</th>
+              <td role="cell" data-label="Afgeven"><span><i class="sw sw--ingang" aria-hidden="true"></i>Aan de ingang</span></td>
+              <td role="cell" data-label="Afhalen"><span><i class="sw sw--binnen" aria-hidden="true"></i>Binnen, na de show <span class="nw">(vanaf 23u00)</span></span></td>
+              <td role="cell" data-label="Concertticket nodig?"><span class="chip chip--ja">Ja</span></td>
+            </tr>
+            <tr role="row">
+              <th scope="row" role="rowheader" data-label="Jouw timeslot">17u00-18u00</th>
+              <td role="cell" data-label="Afgeven"><span><i class="sw sw--ingang" aria-hidden="true"></i>Aan de ingang</span></td>
+              <td role="cell" data-label="Afhalen"><span><i class="sw sw--binnen" aria-hidden="true"></i>Binnen, na de show <span class="nw">(vanaf 23u00)</span></span></td>
+              <td role="cell" data-label="Concertticket nodig?"><span class="chip chip--ja">Ja</span></td>
+            </tr>
+            <tr role="row">
+              <th scope="row" role="rowheader" data-label="Jouw timeslot">19u00-20u00</th>
+              <td role="cell" data-label="Afgeven"><span><i class="sw sw--binnen" aria-hidden="true"></i>Binnen</span></td>
+              <td role="cell" data-label="Afhalen"><span><i class="sw sw--binnen" aria-hidden="true"></i>Binnen, na de show <span class="nw">(vanaf 23u00)</span></span></td>
+              <td role="cell" data-label="Concertticket nodig?"><span class="chip chip--ja">Ja</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="notes">
+      <p class="after">Lukt het niet om je item vóór 17u30 af te halen? Niet getreurd, dan ligt het na de show binnen voor je klaar. Daarvoor heb je wél een concertticket nodig. Kom meteen na de show, want om middernacht gaat Ziggo&nbsp;Dome dicht.</p>
+
+      <div class="opgelet" role="note">
+        <p>Geen concertticket? Je bent ook welkom maar boek dan een timeslot tussen <span class="nw">12u00</span> en <span class="nw">16u00</span>. Je geeft je item af én haalt het af aan de ingang, uiterlijk om 17u30. Daarna ligt je item binnen, en daar kom je niet zonder ticket.</p>
+      </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band band--plum book" aria-labelledby="kies">
+    <div class="wrap">
+      <h2 class="h2" id="kies">Kies hier je timeslot</h2>
+      <p>Kies het uur waarop je je item komt afgeven. Nog twijfels? Scroll even naar de <a href="#faq">veelgestelde vragen</a> hieronder.</p>
+      <a class="btn" data-book aria-disabled="true">Boeken opent binnenkort</a>
+      <!-- plek voor een latere link -->
+      <p data-later hidden></p>
+    </div>
+  </section>
+
+  <section class="band band--grey faq" aria-labelledby="faq">
+    <div class="wrap">
+      <p class="label">FAQ</p>
+      <h2 class="h2" id="faq">Veelgestelde vragen</h2>
+      <div class="faq__list">
+        <details>
+          <summary><span>Kan ik mijn eigen <span class="nw">T-shirt</span> of hoodie laten bedrukken?</span></summary>
+          <div class="faq__a"><p>Ja, dat is net de bedoeling! Breng je eigen <span class="nw">T-shirt</span>, topje, sweater, hoodie of blanco totebag mee. In de <span class="nw">pop-up</span> kies je jouw print.</p></div>
+        </details>
+        <details>
+          <summary><span>Hoeveel kost het?</span></summary>
+          <div class="faq__a"><p>€25 per item. Je betaalt meteen online als je boekt.</p></div>
+        </details>
+        <details>
+          <summary><span>Moet ik vooraf boeken?</span></summary>
+          <div class="faq__a"><p>Ja. Zonder boeking, geen print. Wees er dus snel bij, want op&nbsp;=&nbsp;op.</p></div>
+        </details>
+        <details>
+          <summary><span>Kan ik mijn boeking annuleren?</span></summary>
+          <div class="faq__a"><p>Annuleren kan niet en we betalen niet terug. Je mag je bevestiging wel aan iemand anders geven.</p></div>
+        </details>
+        <details>
+          <summary><span>Welke timeslots kan ik kiezen?</span></summary>
+          <div class="faq__a">
+            <ul>
+              <li><span class="nw">12u00-13u00</span>: afgeven en afhalen aan de ingang. Afhalen van 14u00 tot 17u30.</li>
+              <li><span class="nw">13u00-14u00</span>: afgeven en afhalen aan de ingang. Afhalen van 15u00 tot 17u30.</li>
+              <li><span class="nw">14u00-15u00</span>: afgeven en afhalen aan de ingang. Afhalen van 16u00 tot 17u30.</li>
+              <li><span class="nw">15u00-16u00</span>: afgeven en afhalen aan de ingang. Afhalen van 17u00 tot 17u30.</li>
+              <li><span class="nw">16u00-17u00</span>: afgeven aan de ingang. Afhalen binnen, na de show.</li>
+              <li><span class="nw">17u00-18u00</span>: afgeven aan de ingang. Afhalen binnen, na de show.</li>
+              <li><span class="nw">19u00-20u00</span>: afgeven binnen. Afhalen binnen, na de show.</li>
+            </ul>
+            <p>Tussen 18u00 en 19u00 zijn we even dicht. Geen concertticket? Kies dan een timeslot tussen <span class="nw">12u00</span> en <span class="nw">16u00</span>.</p>
+          </div>
+        </details>
+        <details>
+          <summary><span>Wat als ik te laat ben voor mijn timeslot?</span></summary>
+          <div class="faq__a"><p>Kom gewoon nog langs binnen de uren van jouw plek. We printen in volgorde van aankomst, dus je haalt mogelijk later af. Zonder concertticket: geef uiterlijk om 16u00 af.</p></div>
+        </details>
+        <details>
+          <summary><span>Kan ik meerdere items laten bedrukken?</span></summary>
+          <div class="faq__a"><p>Zeker! Eén boeking is één item. Voor twee items boek je dus twee keer. Is je timeslot vol? Kies dan een ander uur voor je tweede item.</p></div>
+        </details>
+        <details>
+          <summary><span>Welke prints kan ik kiezen?</span></summary>
+          <div class="faq__a">
+            <p>Je kiest ter plekke aan de balie. Van elke print hebben we er maar een beperkt aantal, dus op&nbsp;=&nbsp;op. Wie eerst komt, heeft de meeste keuze. Heb je je hart al verloren aan één print? Kies dan een vroeg timeslot.</p>
+            <!-- plek voor de foto's van de prints -->
+            <div class="prints" data-prints hidden></div>
+          </div>
+        </details>
+        <details>
+          <summary><span>Waar geef ik mijn item af?</span></summary>
+          <div class="faq__a">
+            <p>Dat hangt af van je timeslot:</p>
+            <ul>
+              <li>Tussen 12u00 en 18u00: aan de ingang van Ziggo&nbsp;Dome, links van de grote trap. Je hebt geen concertticket nodig.</li>
+              <li>Tussen 19u00 en 20u00: binnen, naast de merchandise bij de <span class="nw">Noord-trap</span>. Je hebt wel een concertticket nodig.</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary><span>Hoe en wanneer haal ik mijn item af?</span></summary>
+          <div class="faq__a">
+            <p>Geef je nummer en je naam aan de balie.</p>
+            <ul>
+              <li>Timeslot tussen 12u00 en 16u00: aan de ingang, tot 17u30. Vanaf welk uur staat in de tabel hierboven.</li>
+              <li>Timeslot tussen 16u00 en 20u00: binnen, na de show <span class="nw">(vanaf 23u00)</span>.</li>
+            </ul>
+            <p>Niet gelukt vóór 17u30? Niet getreurd, dan ligt je item na de show binnen klaar.</p>
+          </div>
+        </details>
+        <details>
+          <summary><span>Wat gebeurt er met mijn item als ik het niet kom afhalen?</span></summary>
+          <div class="faq__a"><p>We bewaren je item. Mail ons, dan zoeken we een oplossing.</p></div>
+        </details>
+        <details>
+          <summary><span>Heb ik een concertticket nodig?</span></summary>
+          <div class="faq__a">
+            <p>Dat hangt af van je timeslot:</p>
+            <ul>
+              <li><span class="nw">12u00-16u00</span>: nee. Je geeft af en haalt af aan de ingang, uiterlijk om 17u30.</li>
+              <li><span class="nw">16u00-20u00</span>: ja. Je haalt je item binnen af, na de show.</li>
+            </ul>
+          </div>
+        </details>
+        <details>
+          <summary><span>Kan ik ook officiële merch kopen?</span></summary>
+          <div class="faq__a"><p>Zeker! Binnen in Ziggo&nbsp;Dome vind je onze merchandisestands. Daarvoor heb je wel een concertticket nodig. Aan de ingang verkopen we geen merch.</p></div>
+        </details>
+        <details>
+          <summary><span>Moet mijn item aan voorwaarden voldoen?</span></summary>
+          <div class="faq__a">
+            <p>Ja, een paar:</p>
+            <ul>
+              <li><strong>Wel:</strong> <span class="nw">T-shirt</span>, topje, sweater, hoodie of blanco totebag.</li>
+              <li><strong>Niet:</strong> andere items. Zo kunnen we een mooie print garanderen.</li>
+              <li>We printen niet op ritsen, knopen of bestaande logo's.</li>
+              <li><strong>Tip:</strong> hoe meer katoen, hoe mooier je print.</li>
+            </ul>
+          </div>
+        </details>
+      </div>
+      <div class="ask">
+        <h3>Nog een vraag?</h3>
+        <p>Stuur ons een mailtje via <a href="mailto:info@pommelienthijs.be">info@pommelienthijs.be</a>.</p>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p><span class="foot__who">Per Ongeluk BV</span>, Provinciale Steenweg&nbsp;402, 2627&nbsp;Schelle, België</p>
+    <p>De printshop is een manueel proces. Deelname is op eigen risico; we zijn niet verantwoordelijk voor schade, foutmarges of kwaliteitsverlies.</p>
+    <p><a href="mailto:info@pommelienthijs.be">info@pommelienthijs.be</a></p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* De boekingslink van Calendly (begint met https://calendly.com/). Leeg = beide knoppen tonen
+     "Boeken opent binnenkort" en zijn geen link. */
+  var CALENDLY_URL = "";
+
+  var url = CALENDLY_URL.trim();
+  var ok = /^https:\/\/calendly\.com\/[^\s"'<>]+$/.test(url);
+  if (ok) {
+    [].forEach.call(document.querySelectorAll("[data-book]"), function (a) {
+      a.href = url;
+      a.textContent = "Kies je timeslot";
+      a.removeAttribute("aria-disabled");
+    });
+  } else if (url && window.console) {
+    console.warn("CALENDLY_URL is ongeldig, de knoppen blijven dicht: " + url);
+  }
+  if (/[?&]qa=open\b/.test(location.search)) {
+    [].forEach.call(document.querySelectorAll("details"), function (d) { d.open = true; });
+  }
+  /* het label zwaait één keer bij aanraken (muis of vinger) en speelt altijd helemaal uit */
+  var hang = document.querySelector(".hang");
+  if (hang) {
+    hang.addEventListener("pointerenter", function () { hang.classList.add("nudge"); });
+    hang.addEventListener("animationend", function (e) { if (e.target === hang) hang.classList.remove("nudge"); });
+  }
+  /* het scrollmoment: de pers (--fill) en de drie woorden (--w2..--w4) volgen de scroll door het moment */
+  var moment = document.querySelector("[data-moment]");
+  if (moment && document.documentElement.classList.contains("has-moment")) {
+    var clamp = function (v) { return v < 0 ? 0 : v > 1 ? 1 : v; };
+    var ease = function (t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; };
+    var queued = false, pin = moment.querySelector(".moment__pin");
+    var paint = function () {
+      queued = false;
+      var r = moment.getBoundingClientRect(), run = r.height - pin.offsetHeight;
+      if (r.bottom < -50 || r.top > innerHeight + 50) return;
+      var p = run > 0 ? clamp(-r.top / run) : 1;
+      moment.style.setProperty("--fill", ease(clamp((p - .06) / .42)).toFixed(4));
+      moment.style.setProperty("--w2", clamp((p - .52) / .1).toFixed(4));
+      moment.style.setProperty("--w3", clamp((p - .62) / .1).toFixed(4));
+      moment.style.setProperty("--w4", clamp((p - .72) / .1).toFixed(4));
+    };
+    var ask = function () { if (!queued) { queued = true; requestAnimationFrame(paint); } };
+    addEventListener("scroll", ask, { passive: true });
+    addEventListener("resize", ask);
+    var rm = matchMedia("(prefers-reduced-motion: reduce)");
+    var freeze = function () { if (!rm.matches) return; removeEventListener("scroll", ask); removeEventListener("resize", ask); ["--fill", "--w2", "--w3", "--w4"].forEach(function (k) { moment.style.setProperty(k, "1"); }); };
+    if (rm.addEventListener) rm.addEventListener("change", freeze); else if (rm.addListener) rm.addListener(freeze);
+    paint();
+  }
+})();
+</script>
+</body>
+</html>

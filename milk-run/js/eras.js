@@ -216,7 +216,7 @@
         // niet (Lester, 1/9), en de game hangt sowieso niet meer aan die campagne.
         // Wat overblijft is tijdloos en verjaart dus niet opnieuw.
         { n: 'MEDICINE',          y: 2026, d: 6, b: 'MEDICINE · 2026', bonus: true, m: 'spark', hero: true },
-        { n: 'MEDICINE',          y: 2026, d: 5, b: 'EN HET GAAT DOOR', bonus: true, m: 'hearts', hero: true } ] }
+        { n: 'MEDICINE',          y: 2026, d: 5, b: 'WHY WAIT FOR THE WEEKEND', bonus: true, m: 'hearts', hero: true } ] }
     ],
     draw(g, era, t, p) { BACKDROPS[era.backdrop](g, t, p); },
     total() { return this.list.reduce((s, e) => s + e.dur, 0); }

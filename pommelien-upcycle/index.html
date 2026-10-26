@@ -37,9 +37,9 @@
    Upcycle pop-up Ziggo Dome (za 7 november 2026), de fanpagina van Pommelien Thijs.
    Eén taak: begrijpen hoe het werkt en een timeslot kiezen. De prijs hangt als een
    kledinglabel aan de titel: fast fashion heeft een prijskaartje, dit is een tweede leven.
-   Twee plekken, twee kleuren, overal dezelfde:
-     blauw = aan de ingang (12u00 tot 18u00, geen concertticket nodig)
-     pruim = binnen (vanaf 19u00, alleen met concertticket)
+   Twee plekken, twee kleuren, dezelfde in de kaders en de tabel:
+     blauw = aan de ingang (12u00 tot 18u00)
+     pruim = binnen (vanaf 19u00)
    Nul externe aanvragen: geen lettertypes, scripts of embeds van buitenaf.
    ========================================================================== */
 :root{
@@ -75,7 +75,7 @@ body{
   font:400 1.0625rem/1.6 var(--font);
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
 }
-img,svg{ display:block; max-width:100%; height:auto; }
+img{ display:block; max-width:100%; height:auto; }
 a{ color:inherit; text-underline-offset:.18em; text-decoration-thickness:1px; -webkit-tap-highlight-color:transparent; }
 a:hover{ text-decoration-thickness:2px; }
 a:focus-visible{ outline:2px solid var(--ink); outline-offset:3px; border-radius:2px; }
@@ -247,17 +247,23 @@ p, li, dd{ text-wrap:pretty; }
 /* "Ja" bij concertticket: pruim, de kleur van binnen = met concertticket */
 .chip--ja{ background:var(--plum); border-color:var(--plum); color:var(--paper); font-style:normal; font-weight:700; font-size:1rem; padding:.05rem .5rem; }
 
-/* het plannetje */
-.plan{ margin:var(--s5) 0; max-width:28rem; }
-.plan svg{ width:100%; height:auto; overflow:visible; }
-.plan text{ font-family:var(--font); fill:var(--ink); }
-.plan .t-b{ font-weight:var(--heavy); font-size:18px; }
-.plan .t-s{ font-size:16px; }
-.plan .t-l{ font-style:italic; font-weight:500; font-size:13px; letter-spacing:.06em; text-transform:uppercase; }
-/* op een gsm schaalt de tekening kleiner: de labels groeien wat mee */
-@media (max-width:479.98px){ .plan .t-s{ font-size:17px; } .plan .t-b{ font-size:19px; } .plan .t-l{ font-size:14px; } }
+/* het plannetje: een tekening, niet op schaal; een tik opent ze groot (op een gsm om in te zoomen) */
+.plan{ margin:var(--s5) 0; }
+.plan img{ width:100%; }
+.plan__zoom{ position:relative; display:block; cursor:zoom-in; -webkit-tap-highlight-color:transparent; }
+/* bij hover komt de tekening los van het blad, met de schaduw van het label; enkel de opacity beweegt */
+.plan__zoom::after{ content:""; position:absolute; inset:0; box-shadow:0 2px 2px rgba(89,17,61,.14), 0 16px 20px rgba(89,17,61,.16); opacity:0; pointer-events:none; }
+@media (hover:hover){ .plan__zoom:hover::after{ opacity:1; } }
+.plan__zoom:active::after{ opacity:.5; }
+.plan__zoom:focus-visible{ outline:3px solid var(--ink); outline-offset:3px; border-radius:0; }
+/* de tekening en haar schaduw bewegen, het klikvak blijft staan (anders wipt de hover aan de onderrand) */
+@media (prefers-reduced-motion:no-preference){
+  .plan__zoom img, .plan__zoom::after{ transition:transform .45s var(--spring), opacity .2s ease; }
+}
+@media (prefers-reduced-motion:no-preference) and (hover:hover){ .plan__zoom:hover img, .plan__zoom:hover::after{ transform:translateY(-2px); } }
+@media (prefers-reduced-motion:no-preference){ .plan__zoom:active img, .plan__zoom:active::after{ transform:scale(.99); transition-duration:.12s; } }
 
-/* kleurcode in tabel en plan */
+/* kleurcode in de tabel */
 .sw{ display:inline-block; width:.8em; height:.8em; margin-right:.45em; vertical-align:-.02em; border:1.5px solid var(--ink); background:var(--c); }
 .sw--ingang{ --c:var(--blue); }
 .sw--binnen{ --c:var(--plum); }
@@ -356,7 +362,6 @@ p, li, dd{ text-wrap:pretty; }
 /* ==========================================================================
    Breed scherm
    ========================================================================== */
-@media (min-width:760px) and (max-width:959.98px){ .plan{ max-width:calc(50% - .5rem); } }
 @media (min-width:760px){
   .places{ grid-template-columns:1fr 1fr; }
   /* twee kolommen met rijen op dezelfde hoogte: stap 1-4 links, 5-7 rechts */
@@ -384,7 +389,9 @@ p, li, dd{ text-wrap:pretty; }
   .facts .steps{ grid-template-columns:minmax(0,1fr); grid-template-rows:none; grid-auto-flow:row; }
   .facts .steps li:nth-child(4){ border-bottom:0; }
 
-  .where__grid{ display:grid; grid-template-columns:minmax(0,1fr) min(28rem, 50%); column-gap:var(--s6); align-items:start; margin:var(--s5) 0; }
+  /* de tekening iets breder dan de helft, zodat ook het kleinste label leesbaar blijft;
+     de twee kaders rekken mee tot de onderrand van de tekening */
+  .where__grid{ display:grid; grid-template-columns:minmax(0,1fr) min(31rem, 54%); column-gap:var(--s6); align-items:stretch; margin:var(--s5) 0; }
   .where__grid .places{ grid-template-columns:1fr; margin:0; }
   .where__grid .plan{ margin:0; }
 
@@ -429,8 +436,12 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
 @media (forced-colors:active){
   .btn{ border:2px solid ButtonText; }
   .sw{ forced-color-adjust:none; }
-  /* zwarte inkt van de signatuur en het plannetje blijft leesbaar op een roze tegel */
-  .sig, .plan svg{ forced-color-adjust:none; background:var(--pink); }
+  /* zwarte inkt van de signatuur blijft leesbaar op een roze tegel */
+  .sig{ forced-color-adjust:none; background:var(--pink); }
+  /* de schaduw valt hier weg: bij hover een rand in de linkkleur */
+  .plan__zoom:hover:not(:focus-visible){ outline:2px solid LinkText; outline-offset:3px; }
+  /* het zwarte kader van de tekening blijft zichtbaar in een donker thema: roze tegel, zoals de signatuur */
+  .plan img{ forced-color-adjust:none; background:var(--pink); padding:3px; }
 }
 </style>
 </head>
@@ -512,60 +523,19 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
       <div class="places">
         <div class="place place--ingang">
           <h3>Aan de ingang</h3>
-          <p class="place__meta"><span class="chip">van 12u00 tot 18u00</span> <span class="chip">geen concertticket nodig</span></p>
+          <p class="place__meta"><span class="chip">van 12u00 tot 18u00</span></p>
           <p>Aan de ingang van Ziggo&nbsp;Dome, links van de grote trap, op de begane grond.</p>
         </div>
         <div class="place place--binnen">
           <h3>Binnen</h3>
-          <p class="place__meta"><span class="chip">vanaf 19u00</span> <span class="chip">alleen met concertticket</span></p>
+          <p class="place__meta"><span class="chip">vanaf 19u00</span></p>
           <p>In de entreehal van Ziggo&nbsp;Dome, naast de merchandise, bij de <span class="nw">Noord-trap</span>.</p>
         </div>
       </div>
 
-      <!-- Eigen schema op basis van de plattegrond van de zaal, niet op schaal. -->
+      <!-- Tekening van de ingang, niet op schaal. -->
       <figure class="plan">
-        <svg viewBox="18 0 364 372" role="img" aria-labelledby="plan-t" aria-describedby="plan-d">
-          <title id="plan-t">Plannetje van de ingang van Ziggo Dome</title>
-          <desc id="plan-d">Aan de ingang: links van de grote trap, op de begane grond, van 12u00 tot 18u00. Binnen: in de entreehal, naast de merchandise, bij de Noord-trap, vanaf 19u00.</desc>
-          <defs>
-            <marker id="pijl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-              <path d="M0 0 L10 5 L0 10 z" fill="#000"/>
-            </marker>
-          </defs>
-          <text class="t-l" x="20" y="17">Begane grond</text>
-          <!-- gebouw: links, achter, rechts; de gevel apart, met de deuren -->
-          <rect x="20" y="28" width="360" height="262" fill="#EDEDED"/>
-          <rect x="20" y="236" width="360" height="54" fill="#FFFFFF"/>
-          <path d="M20 290 V28 H380 V290" fill="none" stroke="#000" stroke-width="2.5"/>
-          <path d="M20 290 H96 M112 290 H136 M152 290 H176 M192 290 H216 M232 290 H256 M272 290 H296 M312 290 H380" fill="none" stroke="#000" stroke-width="2.5"/>
-          <path d="M20 236 H380" fill="none" stroke="#000" stroke-width="1.2" stroke-dasharray="2 5"/>
-          <!-- twee trappen naar de ring, met de merchandise ernaast -->
-          <g fill="#FFFFFF" stroke="#000" stroke-width="1.5">
-            <rect x="32" y="40" width="40" height="56"/>
-            <rect x="328" y="40" width="40" height="56"/>
-            <rect x="80" y="72" width="54" height="18"/>
-            <rect x="266" y="72" width="54" height="18"/>
-          </g>
-          <path d="M32 47h40M32 54h40M32 61h40M32 68h40M32 75h40M32 82h40M32 89h40M328 47h40M328 54h40M328 61h40M328 68h40M328 75h40M328 82h40M328 89h40" stroke="#000" stroke-width="1"/>
-          <text class="t-s" x="370" y="118" text-anchor="end">Noord-trap</text>
-          <text class="t-s" x="320" y="62" text-anchor="end">merchandise</text>
-          <!-- de grote trap, buiten, rechts van de deuren -->
-          <rect x="334" y="298" width="46" height="58" fill="#FFFFFF" stroke="#000" stroke-width="1.5"/>
-          <path d="M334 305h46M334 312h46M334 319h46M334 326h46M334 333h46M334 340h46M334 347h46" stroke="#000" stroke-width="1"/>
-          <text class="t-s" x="326" y="354" text-anchor="end">grote trap</text>
-          <!-- ingang -->
-          <path d="M200 358 V300" stroke="#000" stroke-width="2" marker-end="url(#pijl)"/>
-          <text class="t-s" x="190" y="338" text-anchor="end">ingang</text>
-          <!-- de twee plekken -->
-          <rect x="300" y="250" width="24" height="24" fill="#68A7BA" stroke="#000" stroke-width="1.5"/>
-          <rect x="250" y="100" width="24" height="24" fill="#59113D" stroke="#000" stroke-width="1.5"/>
-          <text class="t-b" x="34" y="259">Aan de ingang</text>
-          <text class="t-s" x="34" y="279">12u00-18u00</text>
-          <path d="M188 262 H294" stroke="#000" stroke-width="1.5" marker-end="url(#pijl)"/>
-          <text class="t-b" x="34" y="130">Binnen</text>
-          <text class="t-s" x="34" y="150">vanaf 19u00</text>
-          <path d="M116 124 C166 124 200 112 244 112" fill="none" stroke="#000" stroke-width="1.5" marker-end="url(#pijl)"/>
-        </svg>
+        <a class="plan__zoom" href="assets/img/grondplan.png"><img src="assets/img/grondplan.png" width="1380" height="1214" loading="lazy" decoding="async" alt="Grondplan van de ingang van Ziggo Dome. Pop-up van 12u00 tot 18u00: aan de ingang, links van de zwarte trap buiten. Pop-up vanaf 19u00: binnen in de entreehal, bij de Noord-trap."></a>
       </figure>
       </div>
 
@@ -703,8 +673,8 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
           <div class="faq__a">
             <p>Dat hangt af van je timeslot:</p>
             <ul>
-              <li>Tussen 12u00 en 18u00: aan de ingang van Ziggo&nbsp;Dome, links van de grote trap. Je hebt geen concertticket nodig.</li>
-              <li>Tussen 19u00 en 20u00: binnen, naast de merchandise bij de <span class="nw">Noord-trap</span>. Je hebt wel een concertticket nodig.</li>
+              <li>Tussen 12u00 en 18u00: aan de ingang van Ziggo&nbsp;Dome, links van de grote trap.</li>
+              <li>Tussen 19u00 en 20u00: binnen, naast de merchandise bij de <span class="nw">Noord-trap</span>.</li>
             </ul>
           </div>
         </details>

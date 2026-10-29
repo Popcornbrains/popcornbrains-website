@@ -122,10 +122,39 @@
   }
   function geometry() { const W = innerWidth, H = innerHeight; return { W, H, g: Math.max(4, Math.round(W * 0.0055)) }; }
 
+  // ERAS (Lester, 29/10): one screen never mixes eras (per-ongeluk, gedoe, ...). The era of the
+  // first photo in the queue decides the screen; the window holds only photos of that era. An era
+  // with too few photos for a screen (e.g. loose, unsorted photos) joins a shared pool instead.
+  let eraOf = p => p.era || 'los';
+  function setupEras() {
+    const n = {}; photos.forEach(p => { n[p.era || 'los'] = (n[p.era || 'los'] || 0) + 1; });
+    eraOf = p => (n[p.era || 'los'] >= MIN_PHOTOS * 2 ? (p.era || 'los') : '*');
+  }
+  // A small era refills often; photos from its last two screens then wait at the back of the
+  // window and only fill in when the era has nothing else left.
+  const eraRecent = {};
+  function eraWindow() {
+    const era = eraOf(queue[0]);
+    const inEra = () => (era === '*' ? queue.slice() : queue.filter(p => eraOf(p) === era));
+    if (inEra().length < WINDOW) refill();
+    const recentIds = new Set(eraRecent[era] || []);
+    const all = inEra();
+    const fresh = all.filter(p => !recentIds.has(p.id)), stale = all.filter(p => recentIds.has(p.id));
+    if (recentIds.has(all[0].id) && fresh.length) {             // keep the queue head first if it is fresh
+      const i = queue.indexOf(fresh[0]); queue.splice(i, 1); queue.unshift(fresh[0]);
+    }
+    return fresh.concat(stale).slice(0, WINDOW);
+  }
+  function rememberEra(spec) {
+    const era = eraOf(spec.photos[0]);
+    eraRecent[era] = (eraRecent[era + ':prev'] || []).concat(spec.photos.map(p => p.id));
+    eraRecent[era + ':prev'] = spec.photos.map(p => p.id);
+  }
+
   function makeSpec() {
     if (queue.length < WINDOW) refill();
     const { W, H, g } = geometry();
-    const win = queue.slice(0, WINDOW), first = win[0], rest = win.slice(1);
+    const win = eraWindow(), first = win[0], rest = win.slice(1);
     const cands = [], loose = [];
     for (const st of STRUCTURES) {
       const n = st.reduce((a, x) => a + x, 0);
@@ -160,6 +189,7 @@
     const spec = { name: cls, hold: HOLD(choice.n), photos: choice.rows.flat(), cells: (W2, H2, g2) => layout(ratios, W2, H2, g2).cells };
     const ids = new Set(spec.photos.map(p => p.id));
     queue = queue.filter(p => !ids.has(p.id));
+    rememberEra(spec);
     recent.push(...ids);
     if (recent.length > 400) recent.splice(0, recent.length - 400);
     lastName = spec.name;
@@ -168,10 +198,13 @@
 
   // QA only (?sim=N): plan N screens without rendering and report repeats and set clashes.
   function simulate(n) {
-    const lastSeen = new Map(), types = {}; let shown = 0, minGap = Infinity, clashes = 0, gaps = [], minPer = Infinity;
+    const lastSeen = new Map(), types = {}, perEra = {}; let shown = 0, minGap = Infinity, clashes = 0, gaps = [], minPer = Infinity, mixed = 0;
     for (let i = 0; i < n; i++) {
       const spec = makeSpec();
       minPer = Math.min(minPer, spec.photos.length);
+      const eras = new Set(spec.photos.map(p => p.era || 'los'));
+      if (eras.size > 1) mixed++;
+      eras.forEach(e => { perEra[e] = (perEra[e] || 0) + 1; });
       types[spec.name] = (types[spec.name] || 0) + 1;
       const sets = spec.photos.map(p => p.set);
       clashes += sets.length - new Set(sets).size;
@@ -181,7 +214,7 @@
       }
     }
     gaps.sort((a, b) => a - b);
-    const result = { screens: n, photosShown: shown, unique: lastSeen.size, of: photos.length, minGapPhotos: minGap, medianGap: gaps[Math.floor(gaps.length / 2)] || null, setClashes: clashes, minPhotosPerScreen: minPer, types };
+    const result = { screens: n, photosShown: shown, unique: lastSeen.size, of: photos.length, minGapPhotos: minGap, medianGap: gaps[Math.floor(gaps.length / 2)] || null, setClashes: clashes, minPhotosPerScreen: minPer, mixedEraScreens: mixed, screensPerEra: perEra, types };
     window.__sim = result; document.title = 'SIM ' + JSON.stringify(result);
     return result;
   }
@@ -310,6 +343,7 @@
     .then(data => {
       photos = (data.photos || []).filter(p => p.l && p.m && p.ratio > 0);
       if (data.sizes && data.sizes.m > 0) M_EDGE = data.sizes.m;
+      setupEras();
       if (!photos.length) throw new Error('leeg');
       if (q.has('sim')) return simulate(parseInt(q.get('sim'), 10) || 500);
       wake();

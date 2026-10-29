@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>Showreel Pommelien Thijs</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { --fade: 1800ms; --tile: 900ms; }
+  html, body { margin: 0; height: 100%; background: #000; overflow: hidden; cursor: none; }
+  body {
+    font: 500 1rem/1.4 -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    color: #8a8580; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent;
+  }
+  #stage { position: fixed; inset: 0; background: #000; }
+  .screen {
+    position: absolute; inset: 0; opacity: 0;
+    transition: opacity var(--fade) cubic-bezier(.4, 0, .2, 1); will-change: opacity;
+  }
+  .screen.is-on { opacity: 1; }
+  .screen.is-off { opacity: 0; }
+  figure {
+    position: absolute; margin: 0; overflow: hidden; background: #000; opacity: 0;
+    transform: translateZ(0);
+  }
+  figure img {
+    display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%;
+    transform-origin: 50% 40%;
+  }
+  .screen.is-on figure { opacity: 1; transition: opacity var(--tile) ease-out; transition-delay: var(--delay, 0ms); }
+  .kb img { animation: kb var(--hold, 10s) linear forwards; animation-play-state: paused; }
+  .screen.is-on .kb img { animation-play-state: running; }
+  body.is-paused .kb img { animation-play-state: paused !important; }
+  @keyframes kb { from { transform: scale(1); } to { transform: scale(1.045); } }
+  #note {
+    position: fixed; left: 50%; bottom: 6vh; transform: translateX(-50%);
+    padding: .55em 1.1em; border: 1px solid #2a2724; border-radius: .6em; background: #0a0908;
+    font-size: clamp(14px, 1.2vw, 26px); letter-spacing: .02em; opacity: 0; transition: opacity 300ms;
+    pointer-events: none; white-space: nowrap;
+  }
+  #note.is-on { opacity: 1; }
+  body.is-still .screen, body.is-still figure { transition: none !important; }
+  body.is-still .kb img { animation: none !important; }
+  @media (prefers-reduced-motion: reduce) {
+    :root { --fade: 500ms; --tile: 300ms; }
+    .screen.is-on figure { transition-delay: 0ms !important; }
+    .kb img { animation: none; }
+  }
+</style>
+</head>
+<body>
+<div id="stage" aria-label="Showreel Pommelien Thijs"></div>
+<div id="note" role="status" aria-live="polite"></div>
+<script>
+(() => {
+  'use strict';
+  const q = new URLSearchParams(location.search);
+  const TEMPO = Math.min(4, Math.max(0.25, parseFloat(q.get('tempo')) || 1));
+  const STILL = q.has('still') ? (parseInt(q.get('still'), 10) || 0) : null;
+  const ONLY = q.get('only');                   // QA: force one screen type (hero, gallery, trio, feature, wall, quad)
+  const SEED = q.has('seed') ? (parseInt(q.get('seed'), 10) || 1) : (STILL !== null ? 1 : null);
+  const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const FADE = STILL !== null ? 0 : (REDUCED ? 500 : 1800);
+  const WINDOW = 10;
+  const stage = document.getElementById('stage');
+  const note = document.getElementById('note');
+  if (STILL !== null) document.body.classList.add('is-still');
+
+  // Random source: seeded (QA, deterministic) or Math.random (TV).
+  let rnd = Math.random;
+  if (SEED !== null) {
+    let a = SEED >>> 0;
+    rnd = () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+    for (let i = 0; i < 24; i++) rnd();         // warm-up: neighbouring seeds otherwise start alike
+  }
+  const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
+  const pick = arr => arr[Math.floor(rnd() * arr.length)];
+  const weighted = items => { const sum = items.reduce((s, i) => s + i.weight, 0); let r = rnd() * sum; for (const i of items) { r -= i.weight; if (r <= 0) return i; } return items[items.length - 1]; };
+
+  // ---- Screen grammar -------------------------------------------------------------------
+  // Every screen is a template: a set of cells (px rects) that photos are matched to by ratio.
+  // A photo fits a cell when the crop stays under ~23% (ratio within x1.3). Gallery screens
+  // (1 or 2 photos) take the photos' own ratios, so nothing is cropped there.
+  const U = { L: 1.5, P: 0.667 };               // ratio units for row specs
+  const TOL = Math.log(1.3);
+  const fits = (photo, cell) => Math.abs(Math.log(photo.ratio / (cell.w / cell.h)));
+  const orient = p => p.ratio >= 1.2 ? 'L' : (p.ratio <= 0.85 ? 'P' : 'S');
+
+  function rowCells(spec, x, y, w, h, g) {
+    const units = [...spec].reduce((s, c) => s + U[c], 0);
+    const scale = (w - (spec.length - 1) * g) / units;
+    let cx = x; const out = [];
+    for (const c of spec) { const cw = U[c] * scale; out.push({ x: cx, y, w: cw, h }); cx += cw + g; }
+    return out;
+  }
+  const FEATURE_ROWS = ['LP', 'PL', 'PPP'];
+  const WALL_ROWS = ['LPPP', 'PLPP', 'PPLP', 'PPPL', 'PPPPP'];
+  const TEMPLATES = [
+    { name: 'hero', weight: 3, hold: 9000, kb: [0], variants: () => [{ cells: (W, H) => [{ x: 0, y: 0, w: W, h: H }] }] },
+    { name: 'trio', weight: 2, hold: 11000, kb: [], variants: () => [{ cells: (W, H, g) => { const w = (W - 2 * g) / 3; return [0, 1, 2].map(i => ({ x: i * (w + g), y: 0, w, h: H })); } }] },
+    { name: 'feature', weight: 4, hold: 13000, kb: [0], variants: () => {
+      const out = [];
+      for (const a of FEATURE_ROWS) for (const b of FEATURE_ROWS) for (const mirror of [false, true]) out.push({
+        cells: (W, H, g) => {
+          const bigW = Math.min(H * U.P, W * 0.45), rest = W - bigW - g, rh = (H - g) / 2;
+          const rx = mirror ? 0 : bigW + g, bx = mirror ? rest + g : 0;
+          return [{ x: bx, y: 0, w: bigW, h: H }, ...rowCells(a, rx, 0, rest, rh, g), ...rowCells(b, rx, rh + g, rest, rh, g)];
+        }
+      });
+      return out;
+    } },
+    { name: 'wall', weight: 1.2, hold: 15000, kb: [], variants: () => {
+      const out = [];
+      for (const a of WALL_ROWS) for (const b of WALL_ROWS) out.push({ cells: (W, H, g) => { const rh = (H - g) / 2; return [...rowCells(a, 0, 0, W, rh, g), ...rowCells(b, 0, rh + g, W, rh, g)]; } });
+      return out;
+    } },
+    { name: 'quad', weight: 0.6, hold: 11000, kb: [], variants: () => [{ cells: (W, H, g) => { const w = (W - g) / 2, h = (H - g) / 2; return [{ x: 0, y: 0, w, h }, { x: w + g, y: 0, w, h }, { x: 0, y: h + g, w, h }, { x: w + g, y: h + g, w, h }]; } }] },
+  ];
+  const GALLERY = { name: 'gallery', weight: 2, kb: 'all' };
+
+  // Greedy assignment: biggest cell first, closest ratio wins, every cell must fit. A photo from a
+  // set (show or shoot) already on this screen gets a penalty, so a collage mixes shows; it can
+  // still be chosen when nothing else fits.
+  const SAME_SET = 0.35;
+  function assign(cells, pool) {
+    const order = cells.map((c, i) => ({ c, i })).sort((p, r) => r.c.w * r.c.h - p.c.w * p.c.h);
+    const used = new Set(), sets = new Set(), result = new Array(cells.length);
+    for (const { c, i } of order) {
+      let best = null, bestScore = Infinity;
+      for (const p of pool) {
+        if (used.has(p.id)) continue;
+        const d = fits(p, c);
+        if (d >= TOL) continue;
+        const score = d + (p.set && sets.has(p.set) ? SAME_SET : 0);
+        if (score < bestScore) { bestScore = score; best = p; }
+      }
+      if (!best) return null;
+      used.add(best.id); if (best.set) sets.add(best.set); result[i] = best;
+    }
+    return result;
+  }
+
+  function galleryCells(photos, W, H, g) {
+    const n = photos.length, total = photos.reduce((s, p) => s + p.ratio, 0);
+    const h = Math.min(H, (W - (n - 1) * g) / total);
+    const widths = photos.map(p => p.ratio * h);
+    let x = (W - (widths.reduce((s, w) => s + w, 0) + (n - 1) * g)) / 2;
+    const y = (H - h) / 2;
+    return widths.map(w => { const c = { x, y, w, h }; x += w + g; return c; });
+  }
+
+  // ---- Sequence -------------------------------------------------------------------------
+  // The queue is topped up with a fresh shuffle before it runs dry, so the window always holds
+  // enough photos for a full collage. Photos shown recently go to the back of that shuffle, so the
+  // end of one round never repeats right at the start of the next.
+  let photos = [], queue = [], lastName = null;
+  const recent = [];
+  function refill() {
+    const inQueue = new Set(queue.map(p => p.id));
+    const keep = Math.min(120, Math.floor(photos.length * 0.4));
+    const late = new Set(recent.slice(-keep));
+    const fresh = shuffle(photos.filter(p => !inQueue.has(p.id)));
+    queue.push(...fresh.filter(p => !late.has(p.id)), ...fresh.filter(p => late.has(p.id)));
+  }
+  function geometry() { const W = innerWidth, H = innerHeight; return { W, H, g: Math.max(4, Math.round(W * 0.0055)) }; }
+
+  function makeSpec() {
+    if (queue.length < WINDOW) refill();
+    const { W, H, g } = geometry();
+    const win = queue.slice(0, WINDOW);
+    const candidates = [];
+    for (const t of TEMPLATES) {
+      for (const v of shuffle(t.variants())) {
+        const cells = v.cells(W, H, g);
+        const chosen = assign(cells, win);
+        if (chosen) { candidates.push({ name: t.name, weight: t.weight, hold: t.hold, kb: t.kb, photos: chosen, cells: (W2, H2, g2) => v.cells(W2, H2, g2) }); break; }
+      }
+    }
+    // Gallery: one photo, or two of the same orientation, at their own ratio (never cropped).
+    {
+      const first = win[0];
+      const mate = orient(first) !== 'L' ? (win.slice(1).find(p => orient(p) !== 'L') || null) : null;
+      const two = mate && rnd() < 0.8 ? [first, mate] : [first];
+      candidates.push({ name: 'gallery', weight: GALLERY.weight, hold: two.length === 2 ? 10500 : 9000, kb: 'all', photos: two, cells: (W2, H2, g2) => galleryCells(two, W2, H2, g2) });
+    }
+    let options = ONLY ? candidates.filter(c => c.name === ONLY) : candidates.filter(c => c.name !== lastName);
+    if (!options.length) options = candidates;
+    const spec = weighted(options);
+    const ids = new Set(spec.photos.map(p => p.id));
+    queue = queue.filter(p => !ids.has(p.id));
+    recent.push(...ids);
+    if (recent.length > 400) recent.splice(0, recent.length - 400);
+    lastName = spec.name;
+    return spec;
+  }
+
+  // QA only (?sim=N): plan N screens without rendering and report repeats and set clashes.
+  function simulate(n) {
+    const lastSeen = new Map(), types = {}; let shown = 0, minGap = Infinity, clashes = 0, gaps = [];
+    for (let i = 0; i < n; i++) {
+      const spec = makeSpec();
+      types[spec.name] = (types[spec.name] || 0) + 1;
+      const sets = spec.photos.map(p => p.set);
+      clashes += sets.length - new Set(sets).size;
+      for (const p of spec.photos) {
+        if (lastSeen.has(p.id)) { const gap = shown - lastSeen.get(p.id); gaps.push(gap); minGap = Math.min(minGap, gap); }
+        lastSeen.set(p.id, shown); shown++;
+      }
+    }
+    gaps.sort((a, b) => a - b);
+    const result = { screens: n, photosShown: shown, unique: lastSeen.size, of: photos.length, minGapPhotos: minGap, medianGap: gaps[Math.floor(gaps.length / 2)] || null, setClashes: clashes, types };
+    window.__sim = result; document.title = 'SIM ' + JSON.stringify(result);
+    return result;
+  }
+
+  // ---- Rendering ------------------------------------------------------------------------
+  // Smallest file that still fills the cell sharply: the width the photo needs once it covers the
+  // cell, compared with the width of the small version (long edge M_EDGE px).
+  let M_EDGE = 1200;
+  const srcFor = (photo, cell) => {
+    const dpr = devicePixelRatio || 1;
+    const needW = Math.max(cell.w, cell.h * photo.ratio) * dpr;
+    const smallW = photo.ratio >= 1 ? M_EDGE : M_EDGE * photo.ratio;
+    return needW > smallW * 1.05 ? photo.l : photo.m;
+  };
+  function place(fig, c) { fig.style.left = c.x + 'px'; fig.style.top = c.y + 'px'; fig.style.width = c.w + 'px'; fig.style.height = c.h + 'px'; }
+
+  function build(spec) {
+    const { W, H, g } = geometry();
+    const cells = spec.cells(W, H, g);
+    const sec = document.createElement('section');
+    sec.className = 'screen';
+    sec.dataset.name = spec.name;
+    sec.style.setProperty('--hold', Math.round(spec.hold * TEMPO + FADE) + 'ms');
+    spec.photos.forEach((photo, i) => {
+      const fig = document.createElement('figure');
+      if (spec.kb === 'all' || spec.kb.includes(i)) fig.classList.add('kb');
+      fig.style.setProperty('--delay', (i * 120) + 'ms');
+      place(fig, cells[i]);
+      const img = new Image();
+      img.decoding = 'async'; img.alt = ''; img.src = srcFor(photo, cells[i]);
+      fig.appendChild(img);
+      sec.appendChild(fig);
+    });
+    return sec;
+  }
+
+  function decodeAll(sec) {
+    const figs = [...sec.querySelectorAll('figure')];
+    const timeout = new Promise(r => setTimeout(r, 12000));
+    return Promise.race([
+      Promise.all(figs.map(f => f.firstChild.decode().catch(() => f.remove()))),
+      timeout,
+    ]).then(() => sec.querySelector('figure') !== null);
+  }
+
+  async function prepare(spec) {
+    const sec = build(spec);
+    stage.appendChild(sec);
+    const ok = await decodeAll(sec);
+    if (!ok) { sec.remove(); return null; }
+    return { spec, sec };
+  }
+  async function prepareFresh() {
+    for (let i = 0; i < 6; i++) { const r = await prepare(makeSpec()); if (r) return r; }
+    return null;
+  }
+
+  let current = null, currentSpec = null;
+  const history = []; let histPos = -1;
+  function show(next, remember = true) {
+    if (!next) return;
+    if (current) { const old = current; old.classList.add('is-off'); setTimeout(() => old.remove(), FADE + 300); }
+    void next.sec.offsetWidth;
+    next.sec.classList.add('is-on');
+    current = next.sec; currentSpec = next.spec;
+    if (remember) { history.splice(histPos + 1); history.push(next.spec); if (history.length > 40) history.shift(); histPos = history.length - 1; }
+  }
+  function relayout() {
+    const { W, H, g } = geometry();
+    for (const sec of stage.querySelectorAll('.screen')) {
+      const spec = sec === current ? currentSpec : sec._spec;
+      if (!spec) continue;
+      const cells = spec.cells(W, H, g);
+      [...sec.querySelectorAll('figure')].forEach((f, i) => cells[i] && place(f, cells[i]));
+    }
+  }
+
+  // ---- Clock (pausable hold) ---------------------------------------------------------------
+  let paused = false, elapsed = 0, holdMs = 0, holdResolve = null;
+  function holdFor(ms) { holdMs = ms; elapsed = 0; return new Promise(r => { holdResolve = r; }); }
+  setInterval(() => { if (holdResolve && !paused) { elapsed += 100; if (elapsed >= holdMs) { const r = holdResolve; holdResolve = null; r(); } } }, 100);
+  const skip = () => { if (holdResolve) { const r = holdResolve; holdResolve = null; r(); } };
+  function setNote(text) { note.textContent = text || ''; note.classList.toggle('is-on', !!text); }
+
+  async function run() {
+    let next = await prepareFresh();
+    show(next);
+    for (;;) {
+      const pending = prepareFresh().then(r => { if (r) r.sec._spec = r.spec; return r; });
+      await holdFor(currentSpec.hold * TEMPO);
+      next = await pending;
+      if (!next) { setNote('Geen foto kon geladen worden'); continue; }
+      show(next);
+    }
+  }
+
+  async function still(n) {
+    let spec = null;
+    for (let i = 0; i <= n; i++) spec = makeSpec();
+    show(await prepare(spec));
+  }
+
+  // ---- Keys, remote, screen ---------------------------------------------------------------
+  function toggleFullscreen() {
+    const el = document.documentElement;
+    if (document.fullscreenElement) document.exitFullscreen?.();
+    else if (el.requestFullscreen) el.requestFullscreen().catch(() => {});
+    else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  }
+  addEventListener('keydown', e => {
+    if (e.key === ' ') { e.preventDefault(); paused = !paused; document.body.classList.toggle('is-paused', paused); setNote(paused ? 'Pauze' : ''); }
+    else if (e.key === 'ArrowRight' || e.key === 'n') { e.preventDefault(); skip(); }
+    else if (e.key === 'ArrowLeft' || e.key === 'p') {
+      e.preventDefault();
+      if (histPos > 0) { histPos--; prepare(history[histPos]).then(r => show(r, false)); }
+    }
+    else if (e.key === 'f' || e.key === 'Enter') { e.preventDefault(); toggleFullscreen(); }
+  });
+  stage.addEventListener('click', toggleFullscreen);
+  addEventListener('resize', relayout);
+
+  let wakeLock = null;
+  async function wake() { try { if ('wakeLock' in navigator && !wakeLock) { wakeLock = await navigator.wakeLock.request('screen'); wakeLock.addEventListener('release', () => { wakeLock = null; }); } } catch (e) { wakeLock = null; } }
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') wake(); });
+
+  fetch('photos.json', { cache: 'no-cache' })
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(data => {
+      photos = (data.photos || []).filter(p => p.l && p.m && p.ratio > 0);
+      if (data.sizes && data.sizes.m > 0) M_EDGE = data.sizes.m;
+      if (!photos.length) throw new Error('leeg');
+      if (q.has('sim')) return simulate(parseInt(q.get('sim'), 10) || 500);
+      wake();
+      return STILL !== null ? still(STILL) : run();
+    })
+    .catch(err => setNote('Kan photos.json niet laden (' + err.message + ')'));
+})();
+</script>
+</body>
+</html>

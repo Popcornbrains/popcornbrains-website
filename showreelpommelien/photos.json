@@ -1,7 +1,7 @@
 {
  "generated": "2026-10-29",
  "source": "showreelpommelien",
- "count": 55,
+ "count": 78,
  "sizes": {
   "l": 2560,
   "m": 1200
@@ -9,13 +9,223 @@
  "photos": [
   {
    "id": "250409-pommelien-thijs-album-persbeelden-2179-2",
-   "set": "eigen-selectie",
+   "set": "los-250409-pommelien-thijs-album-persbeelden-2179-2",
    "source": "250409_Pommelien Thijs_album_persbeelden_2179.2.jpg",
    "l": "assets/img/250409-pommelien-thijs-album-persbeelden-2179-2-l.jpg",
    "w": 2048,
    "h": 2560,
    "m": "assets/img/250409-pommelien-thijs-album-persbeelden-2179-2-m.jpg",
    "ratio": 0.8
+  },
+  {
+   "id": "3f6be95d-92ab-4983-bb84-9f75eda3a82c",
+   "set": "los-3f6be95d-92ab-4983-bb84-9f75eda3a82c",
+   "source": "3f6be95d-92ab-4983-bb84-9f75eda3a82c.JPG",
+   "l": "assets/img/3f6be95d-92ab-4983-bb84-9f75eda3a82c-l.jpg",
+   "w": 2048,
+   "h": 1536,
+   "m": "assets/img/3f6be95d-92ab-4983-bb84-9f75eda3a82c-m.jpg",
+   "ratio": 1.333
+  },
+  {
+   "id": "credit-ravismits-pommelienthijs-0484",
+   "set": "los-credit-ravismits-pommelienthijs-0484",
+   "source": "Credit_RaviSmits_PommelienThijs_0484.JPG",
+   "l": "assets/img/credit-ravismits-pommelienthijs-0484-l.jpg",
+   "w": 1920,
+   "h": 2560,
+   "m": "assets/img/credit-ravismits-pommelienthijs-0484-m.jpg",
+   "ratio": 0.75
+  },
+  {
+   "id": "photo-26-04-2025-17-57-00",
+   "set": "los-photo-26-04-2025-17-57-00",
+   "source": "Photo 26-04-2025, 17 57 00.JPG",
+   "l": "assets/img/photo-26-04-2025-17-57-00-l.jpg",
+   "w": 2560,
+   "h": 1708,
+   "m": "assets/img/photo-26-04-2025-17-57-00-m.jpg",
+   "ratio": 1.499
+  },
+  {
+   "id": "pommelien-thijs-cas-iliasvanbambost-47",
+   "set": "los-pommelien-thijs-cas-iliasvanbambost-47",
+   "source": "Pommelien Thijs_CAS_IliasVanBambost-47.JPG",
+   "l": "assets/img/pommelien-thijs-cas-iliasvanbambost-47-l.jpg",
+   "w": 1708,
+   "h": 2560,
+   "m": "assets/img/pommelien-thijs-cas-iliasvanbambost-47-m.jpg",
+   "ratio": 0.667
+  },
+  {
+   "id": "pommelienab-iliasvanbambost-48",
+   "set": "los-pommelienab-iliasvanbambost-48",
+   "source": "PommelienAB-IliasVanBambost-48.JPG",
+   "l": "assets/img/pommelienab-iliasvanbambost-48-l.jpg",
+   "w": 2560,
+   "h": 1707,
+   "m": "assets/img/pommelienab-iliasvanbambost-48-m.jpg",
+   "ratio": 1.5
+  },
+  {
+   "id": "pommeliengroningen-ivbphotography-22",
+   "set": "los-pommeliengroningen-ivbphotography-22",
+   "source": "PommelienGroningen-IVBPhotography-22.JPG",
+   "l": "assets/img/pommeliengroningen-ivbphotography-22-l.jpg",
+   "w": 2560,
+   "h": 1707,
+   "m": "assets/img/pommeliengroningen-ivbphotography-22-m.jpg",
+   "ratio": 1.5
+  },
+  {
+   "id": "pommelienmaanrock-ivb-10",
+   "set": "los-pommelienmaanrock-ivb-10",
+   "source": "PommelienMaanrock-IVB-10.JPG",
+   "l": "assets/img/pommelienmaanrock-ivb-10-l.jpg",
+   "w": 1707,
+   "h": 2560,
+   "m": "assets/img/pommelienmaanrock-ivb-10-m.jpg",
+   "ratio": 0.667
+  },
+  {
+   "id": "pommelienpkp-iliasvanbambost-41",
+   "set": "los-pommelienpkp-iliasvanbambost-41",
+   "source": "PommelienPKP_IliasVanBambost-41.JPG",
+   "l": "assets/img/pommelienpkp-iliasvanbambost-41-l.jpg",
+   "w": 2560,
+   "h": 1708,
+   "m": "assets/img/pommelienpkp-iliasvanbambost-41-m.jpg",
+   "ratio": 1.499
+  },
+  {
+   "id": "pommeliensuikerrock-iliasvanbambost-35",
+   "set": "los-pommeliensuikerrock-iliasvanbambost-35",
+   "source": "PommelienSuikerrock_IliasVanBambost-35.JPG",
+   "l": "assets/img/pommeliensuikerrock-iliasvanbambost-35-l.jpg",
+   "w": 2560,
+   "h": 1707,
+   "m": "assets/img/pommeliensuikerrock-iliasvanbambost-35-m.jpg",
+   "ratio": 1.5
+  },
+  {
+   "id": "pommelienthijs-23april-afasdome-clem-protin-13-lotte-de-block",
+   "set": "los-pommelienthijs-23april-afasdome-clem-protin-13-lotte-de-block",
+   "source": "PommelienThijs-23APRIL-AFASDOME_@clem.protin-13 Lotte De Block.JPG",
+   "l": "assets/img/pommelienthijs-23april-afasdome-clem-protin-13-lotte-de-block-l.jpg",
+   "w": 2048,
+   "h": 2560,
+   "m": "assets/img/pommelienthijs-23april-afasdome-clem-protin-13-lotte-de-block-m.jpg",
+   "ratio": 0.8
+  },
+  {
+   "id": "pommelienthijs-23april-afasdome-clem-protin-26",
+   "set": "los-pommelienthijs-23april-afasdome-clem-protin-26",
+   "source": "PommelienThijs-23APRIL-AFASDOME_@clem.protin-26.JPG",
+   "l": "assets/img/pommelienthijs-23april-afasdome-clem-protin-26-l.jpg",
+   "w": 2048,
+   "h": 2560,
+   "m": "assets/img/pommelienthijs-23april-afasdome-clem-protin-26-m.jpg",
+   "ratio": 0.8
+  },
+  {
+   "id": "pommelienthijs-23april-afasdome-clem-protin-6-lotte-de-block",
+   "set": "los-pommelienthijs-23april-afasdome-clem-protin-6-lotte-de-block",
+   "source": "PommelienThijs-23APRIL-AFASDOME_@clem.protin-6 Lotte De Block.JPG",
+   "l": "assets/img/pommelienthijs-23april-afasdome-clem-protin-6-lotte-de-block-l.jpg",
+   "w": 2048,
+   "h": 2560,
+   "m": "assets/img/pommelienthijs-23april-afasdome-clem-protin-6-lotte-de-block-m.jpg",
+   "ratio": 0.8
+  },
+  {
+   "id": "pommelienthijs-23april-afasdome-clem-protin-8-1",
+   "set": "los-pommelienthijs-23april-afasdome-clem-protin-8-1",
+   "source": "PommelienThijs-23APRIL-AFASDOME_@clem.protin-8 (1).JPG",
+   "l": "assets/img/pommelienthijs-23april-afasdome-clem-protin-8-1-l.jpg",
+   "w": 2048,
+   "h": 2560,
+   "m": "assets/img/pommelienthijs-23april-afasdome-clem-protin-8-1-m.jpg",
+   "ratio": 0.8
+  },
+  {
+   "id": "pommelienthijs-rw25-iliasvanbambost-27",
+   "set": "los-pommelienthijs-rw25-iliasvanbambost-27",
+   "source": "PommelienThijs_RW25_IliasVanBambost-27.JPG",
+   "l": "assets/img/pommelienthijs-rw25-iliasvanbambost-27-l.jpg",
+   "w": 2560,
+   "h": 1708,
+   "m": "assets/img/pommelienthijs-rw25-iliasvanbambost-27-m.jpg",
+   "ratio": 1.499
+  },
+  {
+   "id": "pommelienthijs-rw25-iliasvanbambost-92",
+   "set": "los-pommelienthijs-rw25-iliasvanbambost-92",
+   "source": "PommelienThijs_RW25_IliasVanBambost-92.JPG",
+   "l": "assets/img/pommelienthijs-rw25-iliasvanbambost-92-l.jpg",
+   "w": 2560,
+   "h": 1708,
+   "m": "assets/img/pommelienthijs-rw25-iliasvanbambost-92-m.jpg",
+   "ratio": 1.499
+  },
+  {
+   "id": "pommelienthijs-show1-ilias-74",
+   "set": "los-pommelienthijs-show1-ilias-74",
+   "source": "PommelienThijs_Show1_Ilias-74.JPG",
+   "l": "assets/img/pommelienthijs-show1-ilias-74-l.jpg",
+   "w": 2560,
+   "h": 1708,
+   "m": "assets/img/pommelienthijs-show1-ilias-74-m.jpg",
+   "ratio": 1.499
+  },
+  {
+   "id": "pommelienthijs-show2-ilias-32",
+   "set": "los-pommelienthijs-show2-ilias-32",
+   "source": "PommelienThijs_Show2_Ilias-32.JPG",
+   "l": "assets/img/pommelienthijs-show2-ilias-32-l.jpg",
+   "w": 2560,
+   "h": 1707,
+   "m": "assets/img/pommelienthijs-show2-ilias-32-m.jpg",
+   "ratio": 1.5
+  },
+  {
+   "id": "pommelienthijs-show2-ilias-34",
+   "set": "los-pommelienthijs-show2-ilias-34",
+   "source": "PommelienThijs_Show2_Ilias-34.JPG",
+   "l": "assets/img/pommelienthijs-show2-ilias-34-l.jpg",
+   "w": 2560,
+   "h": 1707,
+   "m": "assets/img/pommelienthijs-show2-ilias-34-m.jpg",
+   "ratio": 1.5
+  },
+  {
+   "id": "pommelienthijs-show3-ilias-150",
+   "set": "los-pommelienthijs-show3-ilias-150",
+   "source": "PommelienThijs_Show3_Ilias-150.JPG",
+   "l": "assets/img/pommelienthijs-show3-ilias-150-l.jpg",
+   "w": 2560,
+   "h": 1707,
+   "m": "assets/img/pommelienthijs-show3-ilias-150-m.jpg",
+   "ratio": 1.5
+  },
+  {
+   "id": "pommelien-afaslive-iliasvanbambost-44",
+   "set": "los-pommelien-afaslive-iliasvanbambost-44",
+   "source": "Pommelien_AfasLive_IliasVanBambost-44.JPG",
+   "l": "assets/img/pommelien-afaslive-iliasvanbambost-44-l.jpg",
+   "w": 1707,
+   "h": 2560,
+   "m": "assets/img/pommelien-afaslive-iliasvanbambost-44-m.jpg",
+   "ratio": 0.667
+  },
+  {
+   "id": "pommelien-merch-tshirt07",
+   "set": "los-pommelien-merch-tshirt07",
+   "source": "Pommelien_Merch_TShirt07.JPG",
+   "l": "assets/img/pommelien-merch-tshirt07-l.jpg",
+   "w": 1704,
+   "h": 2272,
+   "m": "assets/img/pommelien-merch-tshirt07-m.jpg",
+   "ratio": 0.75
   },
   {
    "id": "afas-dome-show-1-20260423-clem-protin-pommelienthijs-68b0176c",
@@ -35,16 +245,6 @@
    "w": 2048,
    "h": 2560,
    "m": "assets/img/afas-dome-show-1-20260423-clem-protin-pommelienthijs-a3db23c1-m.jpg",
-   "ratio": 0.8
-  },
-  {
-   "id": "afas-dome-show-1-20260423-clem-protin-pommelienthijs-1639dc67",
-   "set": "afas-dome-show-1-20260423-clem-protin",
-   "source": "afas-dome-show-1-20260423-clem-protin__PommelienThijs-23APRIL-AFASDOME_@clem.protin-8 Lotte De Block (1).jpg",
-   "l": "assets/img/afas-dome-show-1-20260423-clem-protin-pommelienthijs-1639dc67-l.jpg",
-   "w": 2048,
-   "h": 2560,
-   "m": "assets/img/afas-dome-show-1-20260423-clem-protin-pommelienthijs-1639dc67-m.jpg",
    "ratio": 0.8
   },
   {
@@ -136,16 +336,6 @@
    "h": 2560,
    "m": "assets/img/afas-dome-show-1-20260423-nathan-dobbelare-pommelien-e2ac094c-m.jpg",
    "ratio": 0.667
-  },
-  {
-   "id": "afas-dome-show-1-20260423-ravi-smits-credit-ravismit-d5b7ac99",
-   "set": "afas-dome-show-1-20260423-ravi-smits",
-   "source": "afas-dome-show-1-20260423-ravi-smits__Credit_RaviSmits_PommelienThijs_0484 Lotte De Block.jpg",
-   "l": "assets/img/afas-dome-show-1-20260423-ravi-smits-credit-ravismit-d5b7ac99-l.jpg",
-   "w": 1920,
-   "h": 2560,
-   "m": "assets/img/afas-dome-show-1-20260423-ravi-smits-credit-ravismit-d5b7ac99-m.jpg",
-   "ratio": 0.75
   },
   {
    "id": "afas-dome-show-1-20260423-ravi-smits-credit-ravismit-7b6056eb",
@@ -309,12 +499,22 @@
   },
   {
    "id": "album-persbeeld-das",
-   "set": "eigen-selectie",
+   "set": "los-album-persbeeld-das",
    "source": "album-persbeeld-das.jpg",
    "l": "assets/img/album-persbeeld-das-l.jpg",
    "w": 2048,
    "h": 2560,
    "m": "assets/img/album-persbeeld-das-m.jpg",
+   "ratio": 0.8
+  },
+  {
+   "id": "pers-album-gedoe-250409-pommelien-thijs-album-persbeelden-1812-1",
+   "set": "pers-album-gedoe",
+   "source": "pers-album-gedoe__250409_Pommelien Thijs_album_persbeelden_1812.1.jpg",
+   "l": "assets/img/pers-album-gedoe-250409-pommelien-thijs-album-persbeelden-1812-1-l.jpg",
+   "w": 2048,
+   "h": 2560,
+   "m": "assets/img/pers-album-gedoe-250409-pommelien-thijs-album-persbeelden-1812-1-m.jpg",
    "ratio": 0.8
   },
   {
@@ -498,6 +698,26 @@
    "ratio": 1.499
   },
   {
+   "id": "pers-selectie-ongewoon-press-photos-press-pic-ongewoon-1",
+   "set": "pers-selectie-ongewoon-press-photos",
+   "source": "pers-selectie-ongewoon-press-photos__PRESS PIC ONGEWOON 1.jpg",
+   "l": "assets/img/pers-selectie-ongewoon-press-photos-press-pic-ongewoon-1-l.jpg",
+   "w": 2560,
+   "h": 1707,
+   "m": "assets/img/pers-selectie-ongewoon-press-photos-press-pic-ongewoon-1-m.jpg",
+   "ratio": 1.5
+  },
+  {
+   "id": "pers-selectie-ongewoon-press-photos-press-pic-ongewoon-3",
+   "set": "pers-selectie-ongewoon-press-photos",
+   "source": "pers-selectie-ongewoon-press-photos__PRESS PIC ONGEWOON 3.jpg",
+   "l": "assets/img/pers-selectie-ongewoon-press-photos-press-pic-ongewoon-3-l.jpg",
+   "w": 2560,
+   "h": 1707,
+   "m": "assets/img/pers-selectie-ongewoon-press-photos-press-pic-ongewoon-3-m.jpg",
+   "ratio": 1.5
+  },
+  {
    "id": "pers-selectie-wat-een-idee-0243",
    "set": "pers-selectie-wat-een-idee",
    "source": "pers-selectie-wat-een-idee__0243.jpg",
@@ -556,6 +776,16 @@
    "h": 2560,
    "m": "assets/img/pers-selectie-zilver-spotify-zilver-jelle-joly-6-m.jpg",
    "ratio": 0.663
+  },
+  {
+   "id": "pommelienpukkelpop-ivbphotography-64",
+   "set": "los-pommelienpukkelpop-ivbphotography-64",
+   "source": "pommelienpukkelpop-ivbphotography-64.JPG",
+   "l": "assets/img/pommelienpukkelpop-ivbphotography-64-l.jpg",
+   "w": 2560,
+   "h": 1707,
+   "m": "assets/img/pommelienpukkelpop-ivbphotography-64-m.jpg",
+   "ratio": 1.5
   }
  ]
 }

@@ -29,14 +29,9 @@
     transform: translateZ(0);
   }
   figure img {
-    display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 35%;
-    transform-origin: 50% 40%;
+    display: block; width: 100%; height: 100%; object-fit: contain;
   }
   .screen.is-on figure { opacity: 1; transition: opacity var(--tile) ease-out; transition-delay: var(--delay, 0ms); }
-  .kb img { animation: kb var(--hold, 10s) linear forwards; animation-play-state: paused; }
-  .screen.is-on .kb img { animation-play-state: running; }
-  body.is-paused .kb img { animation-play-state: paused !important; }
-  @keyframes kb { from { transform: scale(1); } to { transform: scale(1.045); } }
   #note {
     position: fixed; left: 50%; bottom: 6vh; transform: translateX(-50%);
     padding: .55em 1.1em; border: 1px solid #2a2724; border-radius: .6em; background: #0a0908;
@@ -45,11 +40,9 @@
   }
   #note.is-on { opacity: 1; }
   body.is-still .screen, body.is-still figure { transition: none !important; }
-  body.is-still .kb img { animation: none !important; }
   @media (prefers-reduced-motion: reduce) {
     :root { --fade: 500ms; --tile: 300ms; }
     .screen.is-on figure { transition-delay: 0ms !important; }
-    .kb img { animation: none; }
   }
 </style>
 </head>
@@ -62,11 +55,11 @@
   const q = new URLSearchParams(location.search);
   const TEMPO = Math.min(4, Math.max(0.25, parseFloat(q.get('tempo')) || 1));
   const STILL = q.has('still') ? (parseInt(q.get('still'), 10) || 0) : null;
-  const ONLY = q.get('only');                   // QA: force one screen type (hero, gallery, trio, feature, wall, quad)
+  const ONLY = q.get('only');                   // QA: force one screen type (collage, wand)
   const SEED = q.has('seed') ? (parseInt(q.get('seed'), 10) || 1) : (STILL !== null ? 1 : null);
   const REDUCED = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const FADE = STILL !== null ? 0 : (REDUCED ? 500 : 1800);
-  const WINDOW = 10;
+  const WINDOW = 12;
   const stage = document.getElementById('stage');
   const note = document.getElementById('note');
   if (STILL !== null) document.body.classList.add('is-still');
@@ -79,85 +72,45 @@
     for (let i = 0; i < 24; i++) rnd();         // warm-up: neighbouring seeds otherwise start alike
   }
   const shuffle = arr => { for (let i = arr.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [arr[i], arr[j]] = [arr[j], arr[i]]; } return arr; };
-  const pick = arr => arr[Math.floor(rnd() * arr.length)];
   const weighted = items => { const sum = items.reduce((s, i) => s + i.weight, 0); let r = rnd() * sum; for (const i of items) { r -= i.weight; if (r <= 0) return i; } return items[items.length - 1]; };
 
-  // ---- Screen grammar -------------------------------------------------------------------
-  // Every screen is a template: a set of cells (px rects) that photos are matched to by ratio.
-  // A photo fits a cell when the crop stays under ~23% (ratio within x1.3). Gallery screens
-  // (1 or 2 photos) take the photos' own ratios, so nothing is cropped there.
-  const U = { L: 1.5, P: 0.667 };               // ratio units for row specs
-  const TOL = Math.log(1.3);
-  const fits = (photo, cell) => Math.abs(Math.log(photo.ratio / (cell.w / cell.h)));
-  const orient = p => p.ratio >= 1.2 ? 'L' : (p.ratio <= 0.85 ? 'P' : 'S');
+  // ---- Screen grammar: justified rows, nothing is ever cropped ---------------------------
+  // Every photo keeps its own aspect ratio (object-fit: contain as a safety net). A screen is one
+  // or two rows; the photos in a row stand side by side at one height and the row spans the
+  // width. When the rows together are taller than the screen, the whole block shrinks (gaps stay)
+  // until it fits. What is left is black. No zoom, no crop, no filter.
+  // Lester (29/10): always at least 5 photos per screen. Every structure below holds 5 to 8.
+  const MIN_PHOTOS = 5;
+  const STRUCTURES = [[5], [2, 3], [3, 2], [3, 3], [2, 4], [4, 2], [3, 4], [4, 3], [4, 4]];
+  const CLASS = n => (n <= 6 ? 'collage' : 'wand');
+  const CLASS_WEIGHT = { collage: 4, wand: 2.5 };
+  const MIN_COVER = 0.52;                      // share of the screen the photos must cover
+  const SAME_SET = 0.06;                       // score penalty per extra photo from one set
+  const HOLD = n => Math.min(15000, 7000 + n * 1000);
 
-  function rowCells(spec, x, y, w, h, g) {
-    const units = [...spec].reduce((s, c) => s + U[c], 0);
-    const scale = (w - (spec.length - 1) * g) / units;
-    let cx = x; const out = [];
-    for (const c of spec) { const cw = U[c] * scale; out.push({ x: cx, y, w: cw, h }); cx += cw + g; }
-    return out;
-  }
-  const FEATURE_ROWS = ['LP', 'PL', 'PPP'];
-  const WALL_ROWS = ['LPPP', 'PLPP', 'PPLP', 'PPPL', 'PPPPP'];
-  const TEMPLATES = [
-    { name: 'hero', weight: 3, hold: 9000, kb: [0], variants: () => [{ cells: (W, H) => [{ x: 0, y: 0, w: W, h: H }] }] },
-    { name: 'trio', weight: 2, hold: 11000, kb: [], variants: () => [{ cells: (W, H, g) => { const w = (W - 2 * g) / 3; return [0, 1, 2].map(i => ({ x: i * (w + g), y: 0, w, h: H })); } }] },
-    { name: 'feature', weight: 4, hold: 13000, kb: [0], variants: () => {
-      const out = [];
-      for (const a of FEATURE_ROWS) for (const b of FEATURE_ROWS) for (const mirror of [false, true]) out.push({
-        cells: (W, H, g) => {
-          const bigW = Math.min(H * U.P, W * 0.45), rest = W - bigW - g, rh = (H - g) / 2;
-          const rx = mirror ? 0 : bigW + g, bx = mirror ? rest + g : 0;
-          return [{ x: bx, y: 0, w: bigW, h: H }, ...rowCells(a, rx, 0, rest, rh, g), ...rowCells(b, rx, rh + g, rest, rh, g)];
-        }
-      });
-      return out;
-    } },
-    { name: 'wall', weight: 1.2, hold: 15000, kb: [], variants: () => {
-      const out = [];
-      for (const a of WALL_ROWS) for (const b of WALL_ROWS) out.push({ cells: (W, H, g) => { const rh = (H - g) / 2; return [...rowCells(a, 0, 0, W, rh, g), ...rowCells(b, 0, rh + g, W, rh, g)]; } });
-      return out;
-    } },
-    { name: 'quad', weight: 0.6, hold: 11000, kb: [], variants: () => [{ cells: (W, H, g) => { const w = (W - g) / 2, h = (H - g) / 2; return [{ x: 0, y: 0, w, h }, { x: w + g, y: 0, w, h }, { x: 0, y: h + g, w, h }, { x: w + g, y: h + g, w, h }]; } }] },
-  ];
-  const GALLERY = { name: 'gallery', weight: 2, kb: 'all' };
-
-  // Greedy assignment: biggest cell first, closest ratio wins, every cell must fit. A photo from a
-  // set (show or shoot) already on this screen gets a penalty, so a collage mixes shows; it can
-  // still be chosen when nothing else fits.
-  const SAME_SET = 0.35;
-  function assign(cells, pool) {
-    const order = cells.map((c, i) => ({ c, i })).sort((p, r) => r.c.w * r.c.h - p.c.w * p.c.h);
-    const used = new Set(), sets = new Set(), result = new Array(cells.length);
-    for (const { c, i } of order) {
-      let best = null, bestScore = Infinity;
-      for (const p of pool) {
-        if (used.has(p.id)) continue;
-        const d = fits(p, c);
-        if (d >= TOL) continue;
-        const score = d + (p.set && sets.has(p.set) ? SAME_SET : 0);
-        if (score < bestScore) { bestScore = score; best = p; }
-      }
-      if (!best) return null;
-      used.add(best.id); if (best.set) sets.add(best.set); result[i] = best;
-    }
-    return result;
-  }
-
-  function galleryCells(photos, W, H, g) {
-    const n = photos.length, total = photos.reduce((s, p) => s + p.ratio, 0);
-    const h = Math.min(H, (W - (n - 1) * g) / total);
-    const widths = photos.map(p => p.ratio * h);
-    let x = (W - (widths.reduce((s, w) => s + w, 0) + (n - 1) * g)) / 2;
-    const y = (H - h) / 2;
-    return widths.map(w => { const c = { x, y, w, h }; x += w + g; return c; });
+  // rows: arrays of ratios. Returns { cells, coverage, ok } with cells in row order.
+  function layout(rows, W, H, g) {
+    const hs = rows.map(r => (W - (r.length - 1) * g) / r.reduce((a, x) => a + x, 0));
+    const k = Math.min(1, (H - (rows.length - 1) * g) / hs.reduce((a, h) => a + h, 0));
+    const rowH = hs.map(h => h * k);
+    const blockH = rowH.reduce((a, h) => a + h, 0) + (rows.length - 1) * g;
+    let y = (H - blockH) / 2, area = 0;
+    const cells = [];
+    rows.forEach((r, i) => {
+      const h = rowH[i], widths = r.map(x => x * h);
+      let x = (W - (widths.reduce((a, w) => a + w, 0) + (r.length - 1) * g)) / 2;
+      widths.forEach(w => { cells.push({ x, y, w, h }); area += w * h; x += w + g; });
+      y += h + g;
+    });
+    const ok = Math.max(...rowH) / Math.min(...rowH) <= 2.2 && Math.min(...rowH) >= H * 0.24;
+    return { cells, coverage: area / (W * H), ok };
   }
 
   // ---- Sequence -------------------------------------------------------------------------
   // The queue is topped up with a fresh shuffle before it runs dry, so the window always holds
   // enough photos for a full collage. Photos shown recently go to the back of that shuffle, so the
-  // end of one round never repeats right at the start of the next.
+  // end of one round never repeats right at the start of the next. The first photo in the queue is
+  // always on the next screen, so every photo gets its turn.
   let photos = [], queue = [], lastName = null;
   const recent = [];
   function refill() {
@@ -172,25 +125,39 @@
   function makeSpec() {
     if (queue.length < WINDOW) refill();
     const { W, H, g } = geometry();
-    const win = queue.slice(0, WINDOW);
-    const candidates = [];
-    for (const t of TEMPLATES) {
-      for (const v of shuffle(t.variants())) {
-        const cells = v.cells(W, H, g);
-        const chosen = assign(cells, win);
-        if (chosen) { candidates.push({ name: t.name, weight: t.weight, hold: t.hold, kb: t.kb, photos: chosen, cells: (W2, H2, g2) => v.cells(W2, H2, g2) }); break; }
+    const win = queue.slice(0, WINDOW), first = win[0], rest = win.slice(1);
+    const cands = [], loose = [];
+    for (const st of STRUCTURES) {
+      const n = st.reduce((a, x) => a + x, 0);
+      if (n > win.length) continue;
+      for (let t = 0; t < 24; t++) {
+        const chosen = shuffle([first, ...shuffle(rest.slice()).slice(0, n - 1)]);
+        const rows = []; let i = 0;
+        for (const c of st) { rows.push(chosen.slice(i, i + c)); i += c; }
+        const L = layout(rows.map(r => r.map(p => p.ratio)), W, H, g);
+        const sets = chosen.map(p => p.set || p.id);
+        const clashes = sets.length - new Set(sets).size;
+        const cand = { rows, n, cls: CLASS(n), coverage: L.coverage, score: L.coverage - SAME_SET * clashes };
+        // Never blow a photo up far beyond its own pixels (a small file would turn soft on a tv).
+        const flat = rows.flat(), dpr = devicePixelRatio || 1;
+        const sharp = !L.cells.some((c, j) => c.w * dpr > flat[j].w * 1.35);
+        (L.ok && sharp ? cands : loose).push(cand);
       }
     }
-    // Gallery: one photo, or two of the same orientation, at their own ratio (never cropped).
-    {
-      const first = win[0];
-      const mate = orient(first) !== 'L' ? (win.slice(1).find(p => orient(p) !== 'L') || null) : null;
-      const two = mate && rnd() < 0.8 ? [first, mate] : [first];
-      candidates.push({ name: 'gallery', weight: GALLERY.weight, hold: two.length === 2 ? 10500 : 9000, kb: 'all', photos: two, cells: (W2, H2, g2) => galleryCells(two, W2, H2, g2) });
-    }
-    let options = ONLY ? candidates.filter(c => c.name === ONLY) : candidates.filter(c => c.name !== lastName);
-    if (!options.length) options = candidates;
-    const spec = weighted(options);
+    // Fallbacks keep the 5-photo minimum: best valid layouts, then best layouts that bend a rule,
+    // and only when fewer than 5 photos exist at all, one row with everything there is.
+    let pool = cands.filter(c => c.coverage >= MIN_COVER);
+    if (!pool.length) pool = cands.sort((a, b) => b.score - a.score).slice(0, 3);
+    if (!pool.length) pool = loose.sort((a, b) => b.score - a.score).slice(0, 3);
+    if (!pool.length) pool = [{ rows: [win.slice(0, Math.min(win.length, MIN_PHOTOS))], n: Math.min(win.length, MIN_PHOTOS), cls: 'collage', score: 0 }];
+    const classes = [...new Set(pool.map(c => c.cls))];
+    let options = ONLY ? classes.filter(c => c === ONLY) : classes.filter(c => c !== lastName);
+    if (!options.length) options = classes;
+    const cls = weighted(options.map(c => ({ c, weight: CLASS_WEIGHT[c] }))).c;
+    const best = pool.filter(c => c.cls === cls).sort((a, b) => b.score - a.score);
+    const choice = best[Math.floor(rnd() * Math.min(3, best.length))];
+    const ratios = choice.rows.map(r => r.map(p => p.ratio));
+    const spec = { name: cls, hold: HOLD(choice.n), photos: choice.rows.flat(), cells: (W2, H2, g2) => layout(ratios, W2, H2, g2).cells };
     const ids = new Set(spec.photos.map(p => p.id));
     queue = queue.filter(p => !ids.has(p.id));
     recent.push(...ids);
@@ -201,9 +168,10 @@
 
   // QA only (?sim=N): plan N screens without rendering and report repeats and set clashes.
   function simulate(n) {
-    const lastSeen = new Map(), types = {}; let shown = 0, minGap = Infinity, clashes = 0, gaps = [];
+    const lastSeen = new Map(), types = {}; let shown = 0, minGap = Infinity, clashes = 0, gaps = [], minPer = Infinity;
     for (let i = 0; i < n; i++) {
       const spec = makeSpec();
+      minPer = Math.min(minPer, spec.photos.length);
       types[spec.name] = (types[spec.name] || 0) + 1;
       const sets = spec.photos.map(p => p.set);
       clashes += sets.length - new Set(sets).size;
@@ -213,7 +181,7 @@
       }
     }
     gaps.sort((a, b) => a - b);
-    const result = { screens: n, photosShown: shown, unique: lastSeen.size, of: photos.length, minGapPhotos: minGap, medianGap: gaps[Math.floor(gaps.length / 2)] || null, setClashes: clashes, types };
+    const result = { screens: n, photosShown: shown, unique: lastSeen.size, of: photos.length, minGapPhotos: minGap, medianGap: gaps[Math.floor(gaps.length / 2)] || null, setClashes: clashes, minPhotosPerScreen: minPer, types };
     window.__sim = result; document.title = 'SIM ' + JSON.stringify(result);
     return result;
   }
@@ -236,10 +204,8 @@
     const sec = document.createElement('section');
     sec.className = 'screen';
     sec.dataset.name = spec.name;
-    sec.style.setProperty('--hold', Math.round(spec.hold * TEMPO + FADE) + 'ms');
     spec.photos.forEach((photo, i) => {
       const fig = document.createElement('figure');
-      if (spec.kb === 'all' || spec.kb.includes(i)) fig.classList.add('kb');
       fig.style.setProperty('--delay', (i * 120) + 'ms');
       place(fig, cells[i]);
       const img = new Image();

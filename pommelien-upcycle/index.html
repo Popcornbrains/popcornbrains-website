@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Upcycle pop-up Ziggo Dome · Pommelien Thijs</title>
 <meta name="description" content="Voor het eerst in Nederland: de upcycle pop-up van Pommelien Thijs! Je brengt je eigen T-shirt, hoodie of blanco totebag mee naar Ziggo Dome. Wij geven het een tweede leven met een unieke Pommelien-print.">
-<meta name="robots" content="noindex">
 <meta name="theme-color" content="#E1C3DD">
 <meta name="color-scheme" content="light">
 <meta name="format-detection" content="telephone=no">
@@ -114,13 +113,10 @@ p, li, dd{ text-wrap:pretty; }
 .btn:hover{ transform:translateY(-2px); background:var(--plum); border-color:var(--plum); color:var(--paper); text-decoration:none; }
 .btn:active{ transform:scale(.98); transition-duration:.12s; }
 .btn:focus-visible{ outline:3px solid var(--ink); outline-offset:3px; border-radius:0; }
-/* Nog geen boekingslink: zichtbaar, maar geen knop; ook bij hover verandert er niets */
-.btn[aria-disabled="true"]{ background:transparent; color:var(--ink); border-color:var(--ink); border-style:dashed; cursor:default; transform:none; }
 /* op pruim */
 .band--plum .btn{ border-color:var(--paper); }
 .band--plum .btn:hover{ background:var(--pink); border-color:var(--pink); color:var(--ink); }
 .band--plum .btn:focus-visible{ outline-color:var(--paper); }
-.band--plum .btn[aria-disabled="true"]{ background:transparent; border-color:var(--paper); color:var(--paper); }
 
 /* ==========================================================================
    Hero: de signatuur, de titel, het label met de prijs, de knop
@@ -319,6 +315,8 @@ p, li, dd{ text-wrap:pretty; }
    ========================================================================== */
 .book .wrap{ display:grid; gap:var(--s4); }
 .book .h2{ margin:0; }
+/* de knop bovenaan springt hierheen: wat pruim boven de kop, zodat ze niet tegen de rand plakt */
+#kies{ scroll-margin-top:var(--s6); }
 .book p{ max-width:var(--col); font-size:1.1875rem; line-height:1.5; }
 .book a:not(.btn):focus-visible{ outline-color:var(--paper); }
 
@@ -358,6 +356,11 @@ p, li, dd{ text-wrap:pretty; }
 .foot .wrap{ display:grid; gap:var(--s2); }
 .foot p{ max-width:var(--col); }
 .foot__who{ font-weight:700; }
+/* de voorwaarden waar de Calendly-boeking naar verwijst ("de voorwaarden op de website") */
+.foot__h{ margin:var(--s3) 0 0; font-weight:700; font-size:inherit; line-height:inherit; }
+.foot__terms{ margin:0; padding:0 0 0 1.1rem; display:grid; gap:.35rem; max-width:var(--col); }
+.foot__terms li{ text-wrap:pretty; }
+.foot__terms li::marker{ color:var(--plum); }
 
 /* ==========================================================================
    Breed scherm
@@ -464,7 +467,7 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
         </div>
       </div>
     </div>
-    <a class="btn" data-book aria-disabled="true">Boeken opent binnenkort</a>
+    <a class="btn" href="#kies">Boek je timeslot</a>
   </div>
 </header>
 
@@ -495,7 +498,7 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
           <div><dt>Wanneer:</dt><dd>zaterdag <span class="nw">7 november</span> 2026</dd></div>
           <div><dt>Prijs:</dt><dd>€25 per item.</dd></div>
         </dl>
-        <p>Zonder timeslot, geen print. Eén reservering&nbsp;=&nbsp;één item.</p>
+        <p>Zonder timeslot, geen print. Eén boeking&nbsp;=&nbsp;één item.</p>
         <p>Snel zijn loont: van elke print hebben we maar een beperkt aantal. Op&nbsp;=&nbsp;op.</p>
         <p>Geen concertticket? Je bent ook welkom! Boek dan een timeslot tussen <span class="nw">12u00</span> en <span class="nw">16u00</span>.</p>
       </div>
@@ -524,18 +527,18 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
         <div class="place place--ingang">
           <h3>Aan de ingang</h3>
           <p class="place__meta"><span class="chip">van 12u00 tot 18u00</span></p>
-          <p>Aan de ingang van Ziggo&nbsp;Dome, links van de grote trap, op de begane grond.</p>
+          <p>Aan de ingang van Ziggo&nbsp;Dome, links van de zwarte trap, op de begane grond.</p>
         </div>
         <div class="place place--binnen">
           <h3>Binnen</h3>
           <p class="place__meta"><span class="chip">vanaf 19u00</span></p>
-          <p>In de entreehal van Ziggo&nbsp;Dome, naast de merchandise, bij de <span class="nw">Noord-trap</span>.</p>
+          <p>In de entreehal van Ziggo&nbsp;Dome, naast de merchandise, bij de <span class="nw">Noord trap</span>.</p>
         </div>
       </div>
 
       <!-- Tekening van de ingang, niet op schaal. -->
       <figure class="plan">
-        <a class="plan__zoom" href="assets/img/grondplan.png"><img src="assets/img/grondplan.png" width="1380" height="1214" loading="lazy" decoding="async" alt="Grondplan van de ingang van Ziggo Dome. Pop-up van 12u00 tot 18u00: aan de ingang, links van de zwarte trap buiten. Pop-up vanaf 19u00: binnen in de entreehal, bij de Noord-trap."></a>
+        <a class="plan__zoom" href="assets/img/grondplan.png"><img src="assets/img/grondplan.png" width="1380" height="1214" loading="lazy" decoding="async" alt="Grondplan van de ingang van Ziggo Dome. Pop-up van 12u00 tot 18u00: aan de ingang, links van de zwarte trap buiten. Pop-up vanaf 19u00: binnen in de entreehal, bij de Noord trap."></a>
       </figure>
       </div>
 
@@ -600,7 +603,7 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
       <p class="after">Lukt het niet om je item vóór 17u30 af te halen? Niet getreurd, dan ligt het na de show binnen voor je klaar. Daarvoor heb je wél een concertticket nodig. Kom meteen na de show, want om middernacht gaat Ziggo&nbsp;Dome dicht.</p>
 
       <div class="opgelet" role="note">
-        <p>Geen concertticket? Je bent ook welkom maar boek dan een timeslot tussen <span class="nw">12u00</span> en <span class="nw">16u00</span>. Je geeft je item af én haalt het af aan de ingang, uiterlijk om 17u30. Daarna ligt je item binnen, en daar kom je niet zonder ticket.</p>
+        <p>Geen concertticket? Je bent ook welkom, maar boek dan een timeslot tussen <span class="nw">12u00</span> en <span class="nw">16u00</span>. Je geeft je item af én haalt het af aan de ingang, uiterlijk om 17u30. Daarna ligt je item binnen, en daar kom je niet zonder ticket.</p>
       </div>
       </div>
     </div>
@@ -610,7 +613,7 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
     <div class="wrap">
       <h2 class="h2" id="kies">Kies hier je timeslot</h2>
       <p>Kies het uur waarop je je item komt afgeven. Nog twijfels? Scroll even naar de <a href="#faq">veelgestelde vragen</a> hieronder.</p>
-      <a class="btn" data-book aria-disabled="true">Boeken opent binnenkort</a>
+      <a class="btn" href="https://calendly.com/pommelienthijs">Kies je timeslot</a>
       <!-- plek voor een latere link -->
       <p data-later hidden></p>
     </div>
@@ -628,6 +631,18 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
         <details>
           <summary><span>Hoeveel kost het?</span></summary>
           <div class="faq__a"><p>€25 per item. Je betaalt meteen online als je boekt.</p></div>
+        </details>
+        <details>
+          <summary><span>Hoe kan ik betalen?</span></summary>
+          <div class="faq__a"><p>Online, meteen als je boekt: met je Visa of Mastercard (ook een debitkaart), Apple&nbsp;Pay of Google&nbsp;Pay. iDEAL kan helaas niet. Geen kaart? Vraag iemand om voor je te boeken.</p></div>
+        </details>
+        <details>
+          <summary><span>Moet ik mijn bevestigingsmail afprinten?</span></summary>
+          <div class="faq__a"><p>Nee hoor, op je telefoon is perfect. Aan de balie zeg je gewoon je naam.</p></div>
+        </details>
+        <details>
+          <summary><span>Kan iemand anders mijn item afgeven of afhalen?</span></summary>
+          <div class="faq__a"><p>Ja. Geef je bevestigingsmail mee om af te geven, en je nummer en je naam om af te halen.</p></div>
         </details>
         <details>
           <summary><span>Moet ik vooraf boeken?</span></summary>
@@ -654,11 +669,11 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
         </details>
         <details>
           <summary><span>Wat als ik te laat ben voor mijn timeslot?</span></summary>
-          <div class="faq__a"><p>Kom gewoon nog langs binnen de uren van jouw plek. We printen in volgorde van aankomst, dus je haalt mogelijk later af. Zonder concertticket: geef uiterlijk om 16u00 af.</p></div>
+          <div class="faq__a"><p>Kom toch nog langs bij de balie. We kijken of we je item nog tussendoor kunnen printen, maar dat kunnen we niet beloven. Ben je te laat, dan vervalt je timeslot in principe.</p></div>
         </details>
         <details>
           <summary><span>Kan ik meerdere items laten bedrukken?</span></summary>
-          <div class="faq__a"><p>Zeker! Eén boeking is één item. Voor twee items boek je dus twee keer. Is je timeslot vol? Kies dan een ander uur voor je tweede item.</p></div>
+          <div class="faq__a"><p>Zeker! Eén boeking is één item. Voor twee items boek je dus twee keer. Dat mag in hetzelfde timeslot. Is dat timeslot vol? Kies dan een ander uur voor je tweede item.</p></div>
         </details>
         <details>
           <summary><span>Welke prints kan ik kiezen?</span></summary>
@@ -673,8 +688,8 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
           <div class="faq__a">
             <p>Dat hangt af van je timeslot:</p>
             <ul>
-              <li>Tussen 12u00 en 18u00: aan de ingang van Ziggo&nbsp;Dome, links van de grote trap.</li>
-              <li>Tussen 19u00 en 20u00: binnen, naast de merchandise bij de <span class="nw">Noord-trap</span>.</li>
+              <li>Tussen 12u00 en 18u00: aan de ingang van Ziggo&nbsp;Dome, links van de zwarte trap.</li>
+              <li>Tussen 19u00 en 20u00: binnen, naast de merchandise bij de <span class="nw">Noord trap</span>.</li>
             </ul>
           </div>
         </details>
@@ -719,6 +734,18 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
             </ul>
           </div>
         </details>
+        <details>
+          <summary><span>Werkt de print ook op een zwart of donker item?</span></summary>
+          <div class="faq__a"><p>Ja! Onze transfers werken ook op zwarte en donkere items.</p></div>
+        </details>
+        <details>
+          <summary><span>Kies ik zelf of de print op de voorkant of de achterkant komt?</span></summary>
+          <div class="faq__a"><p>Ja. Als je je item afgeeft, kies je welke print je wil en of die op de voorkant of de achterkant komt.</p></div>
+        </details>
+        <details>
+          <summary><span>Moet mijn item proper en droog zijn?</span></summary>
+          <div class="faq__a"><p>Ja. Op een vuil of nat item hecht de print niet goed. Breng je item dus proper en droog mee.</p></div>
+        </details>
       </div>
       <div class="ask">
         <h3>Nog een vraag?</h3>
@@ -732,28 +759,18 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
 <footer class="foot">
   <div class="wrap">
     <p><span class="foot__who">Per Ongeluk BV</span>, Provinciale Steenweg&nbsp;402, 2627&nbsp;Schelle, België</p>
-    <p>De printshop is een manueel proces. Deelname is op eigen risico; we zijn niet verantwoordelijk voor schade, foutmarges of kwaliteitsverlies.</p>
+    <h2 class="foot__h" id="voorwaarden">Voorwaarden</h2>
+    <ul class="foot__terms">
+      <li>Annuleren kan niet en we betalen niet terug.</li>
+      <li>Het printen gebeurt met de hand. Je doet mee op eigen risico: we zijn niet verantwoordelijk voor schade, kleine afwijkingen of kwaliteitsverlies.</li>
+      <li>Item niet afgehaald? Dan bewaren we het. Stuur een mailtje naar <a href="mailto:info@pommelienthijs.be">info@pommelienthijs.be</a> en we zoeken samen een oplossing.</li>
+    </ul>
     <p><a href="mailto:info@pommelienthijs.be">info@pommelienthijs.be</a></p>
   </div>
 </footer>
 
 <script>
 (function () {
-  /* De boekingslink van Calendly (begint met https://calendly.com/). Leeg = beide knoppen tonen
-     "Boeken opent binnenkort" en zijn geen link. */
-  var CALENDLY_URL = "";
-
-  var url = CALENDLY_URL.trim();
-  var ok = /^https:\/\/calendly\.com\/[^\s"'<>]+$/.test(url);
-  if (ok) {
-    [].forEach.call(document.querySelectorAll("[data-book]"), function (a) {
-      a.href = url;
-      a.textContent = "Kies je timeslot";
-      a.removeAttribute("aria-disabled");
-    });
-  } else if (url && window.console) {
-    console.warn("CALENDLY_URL is ongeldig, de knoppen blijven dicht: " + url);
-  }
   if (/[?&]qa=open\b/.test(location.search)) {
     [].forEach.call(document.querySelectorAll("details"), function (d) { d.open = true; });
   }

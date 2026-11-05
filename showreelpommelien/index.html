@@ -86,7 +86,8 @@
   const CLASS_WEIGHT = { collage: 4, wand: 2.5 };
   const MIN_COVER = 0.52;                      // share of the screen the photos must cover
   const SAME_SET = 0.06;                       // score penalty per extra photo from one set
-  const HOLD = n => Math.min(15000, 7000 + n * 1000);
+  // Lester (5/11): each screen a bit shorter. 5 photos 10 s, 6 11 s, 7+ 12 s (was 12 to 15 s).
+  const HOLD = n => Math.min(12000, 5000 + n * 1000);
 
   // rows: arrays of ratios. Returns { cells, coverage, ok } with cells in row order.
   function layout(rows, W, H, g) {
@@ -111,14 +112,22 @@
   // enough photos for a full collage. Photos shown recently go to the back of that shuffle, so the
   // end of one round never repeats right at the start of the next. The first photo in the queue is
   // always on the next screen, so every photo gets its turn.
-  let photos = [], queue = [], lastName = null;
+  let photos = [], queue = [], lastName = null, opened = false;
   const recent = [];
+  // Lester (5/11): the reel always opens on Gedoe. The very first fill puts a Gedoe photo at the
+  // head of the queue, so the first screen is a Gedoe screen (the era of the head decides it).
+  const START_ERA = 'gedoe';
   function refill() {
     const inQueue = new Set(queue.map(p => p.id));
     const keep = Math.min(120, Math.floor(photos.length * 0.4));
     const late = new Set(recent.slice(-keep));
     const fresh = shuffle(photos.filter(p => !inQueue.has(p.id)));
     queue.push(...fresh.filter(p => !late.has(p.id)), ...fresh.filter(p => late.has(p.id)));
+    if (!opened) {
+      opened = true;
+      const i = queue.findIndex(p => p.era === START_ERA);
+      if (i > 0) queue.unshift(...queue.splice(i, 1));
+    }
   }
   function geometry() { const W = innerWidth, H = innerHeight; return { W, H, g: Math.max(4, Math.round(W * 0.0055)) }; }
 

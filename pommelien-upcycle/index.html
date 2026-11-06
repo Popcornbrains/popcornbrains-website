@@ -149,6 +149,19 @@ p, li, dd{ text-wrap:pretty; }
 .tag__when{ font-style:italic; font-size:1rem; line-height:1.35; }
 .tag__price{ margin:.35rem 0 .6rem; font-weight:var(--heavy); font-size:clamp(2.25rem, 10vw, 2.75rem); line-height:1; letter-spacing:-.02em; }
 .tag__bring{ padding-top:.7rem; border-top:1px solid var(--rule); font-size:1rem; line-height:1.4; }
+/* Uitverkocht (sinds 6/11): een sticker over de hele prijsregel, zoals een winkel dat doet. Pruim met roze
+   letters en een dun kader erin; hij kleeft scheef op het label en zwaait mee aan het draadje. De transparante
+   rand wordt zichtbaar in een hoog-contrastmodus, waar de pruimen achtergrond wegvalt. */
+.tag__deal{ position:relative; margin:.8rem 0 .7rem; }
+.tag__sold{
+  position:absolute; inset:-.3rem -.6rem; z-index:1; margin:0;
+  display:flex; align-items:center; justify-content:center;
+  border:2px solid transparent; background:var(--plum); color:var(--pink);
+  outline:1px solid currentColor; outline-offset:-6px;
+  font-weight:var(--heavy); text-transform:uppercase; font-size:clamp(1.125rem, 5.4vw, 1.5rem); line-height:1; letter-spacing:.08em; white-space:nowrap;
+  box-shadow:0 1px 1px rgba(89,17,61,.2), 0 6px 10px rgba(89,17,61,.2);
+  transform:rotate(-2.5deg);
+}
 
 .hero .btn{ grid-area:cta; }
 /* tablet: het draadje vertrekt onder de staarten van "pop-up" */
@@ -315,8 +328,8 @@ p, li, dd{ text-wrap:pretty; }
    ========================================================================== */
 .book .wrap{ display:grid; gap:var(--s4); }
 .book .h2{ margin:0; }
-/* de knop bovenaan springt hierheen: wat pruim boven de kop, zodat ze niet tegen de rand plakt */
-#kies{ scroll-margin-top:var(--s6); }
+/* een sprong naar een kop laat wat ruimte erboven, zodat ze niet tegen de rand plakt */
+#kies, #faq{ scroll-margin-top:var(--s6); }
 .book p{ max-width:var(--col); font-size:1.1875rem; line-height:1.5; }
 .book a:not(.btn):focus-visible{ outline-color:var(--paper); }
 
@@ -384,6 +397,7 @@ p, li, dd{ text-wrap:pretty; }
   .tag__card{ padding:2.9rem 1.6rem 1.7rem; }
   .tag__when, .tag__bring{ font-size:1.125rem; }
   .tag__price{ font-size:3.25rem; }
+  .tag__sold{ font-size:1.875rem; }
 
   .intro .lede{ max-width:48rem; font-size:1.5rem; line-height:1.45; }
   /* het kader naast de stappen; de stappen in één kolom */
@@ -424,6 +438,13 @@ p, li, dd{ text-wrap:pretty; }
      zodat de binnenkomst van .tag nooit herstart */
   .hang{ transform-origin:50% 0; }
   .hang.nudge{ animation:nudge .9s var(--out); }
+  /* de sticker kleeft erop zodra het label uitgezwaaid is */
+  .tag__sold{ animation:slap .55s var(--spring) 1.1s both; }
+}
+@keyframes slap{
+  0%{ opacity:0; transform:rotate(-9deg) scale(1.35); }
+  55%{ opacity:1; }
+  100%{ opacity:1; transform:rotate(-2.5deg) scale(1); }
 }
 @keyframes rise{ from{ opacity:0; transform:translateY(.25em); } to{ opacity:1; transform:none; } }
 @keyframes swing{
@@ -462,12 +483,14 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
         <div class="tag__card">
           <span class="tag__eyelet" aria-hidden="true"></span>
           <p class="tag__when">zaterdag <span class="nw">7 november 2026</span>, Ziggo&nbsp;Dome</p>
-          <p class="tag__price">€25 per item</p>
+          <div class="tag__deal">
+            <p class="tag__price">€25 per item</p>
+            <p class="tag__sold">Uitverkocht</p>
+          </div>
           <p class="tag__bring">Breng je eigen <span class="nw">T-shirt</span>, hoodie of blanco totebag mee</p>
         </div>
       </div>
     </div>
-    <a class="btn" href="#kies">Boek je timeslot</a>
   </div>
 </header>
 
@@ -611,9 +634,8 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
 
   <section class="band band--plum book" aria-labelledby="kies">
     <div class="wrap">
-      <h2 class="h2" id="kies">Kies hier je timeslot</h2>
-      <p>Kies het uur waarop je je item komt afgeven. Nog twijfels? Scroll even naar de <a href="#faq">veelgestelde vragen</a> hieronder.</p>
-      <a class="btn" href="https://calendly.com/pommelienthijs">Kies je timeslot</a>
+      <h2 class="h2" id="kies">Alle timeslots zijn uitverkocht</h2>
+      <p>Bedankt voor jullie enthousiasme! Heb je geboekt? Dan zien we je op 7&nbsp;november in Ziggo&nbsp;Dome. Waar en wanneer je moet zijn, lees je hierboven. Nog twijfels? Scroll even naar de <a href="#faq">veelgestelde vragen</a> hieronder.</p>
       <!-- plek voor een latere link -->
       <p data-later hidden></p>
     </div>

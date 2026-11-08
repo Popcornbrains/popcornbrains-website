@@ -114,9 +114,13 @@
   // always on the next screen, so every photo gets its turn.
   let photos = [], queue = [], lastName = null, opened = false;
   const recent = [];
-  // Lester (5/11): the reel always opens on Gedoe. The very first fill puts a Gedoe photo at the
-  // head of the queue, so the first screen is a Gedoe screen (the era of the head decides it).
+  // Lester (8/11): the reel always opens with at least two Ziggo Dome photos (7/11/2026), preferably
+  // by Ravi Smits. The very first fill puts START_MIN of them (random, Ravi Smits first) at the head
+  // of the queue and the first screen must hold all of them. They are Gedoe photos, so the reel still
+  // opens on Gedoe (Lester, 5/11). Without any Ziggo photo it falls back to one Gedoe photo up front.
+  const START_SET = /^ziggo-dome/, START_PREFER = /ravi-smits/, START_MIN = 2;
   const START_ERA = 'gedoe';
+  let mustLead = 1;                            // queue-head photos the next screen must hold
   function refill() {
     const inQueue = new Set(queue.map(p => p.id));
     const keep = Math.min(120, Math.floor(photos.length * 0.4));
@@ -125,8 +129,17 @@
     queue.push(...fresh.filter(p => !late.has(p.id)), ...fresh.filter(p => late.has(p.id)));
     if (!opened) {
       opened = true;
-      const i = queue.findIndex(p => p.era === START_ERA);
-      if (i > 0) queue.unshift(...queue.splice(i, 1));
+      const pool = queue.filter(p => START_SET.test(p.set || ''));
+      const ranked = pool.filter(p => START_PREFER.test(p.set || '')).concat(pool.filter(p => !START_PREFER.test(p.set || '')));
+      const lead = ranked.length ? [ranked[0]] : [];
+      for (const p of ranked.slice(1)) if (lead.length < START_MIN && eraOf(p) === eraOf(lead[0])) lead.push(p);
+      if (lead.length) {
+        queue = lead.concat(queue.filter(p => !lead.includes(p)));
+        mustLead = lead.length;
+      } else {
+        const i = queue.findIndex(p => p.era === START_ERA);
+        if (i > 0) queue.unshift(...queue.splice(i, 1));
+      }
     }
   }
   function geometry() { const W = innerWidth, H = innerHeight; return { W, H, g: Math.max(4, Math.round(W * 0.0055)) }; }
@@ -163,13 +176,15 @@
   function makeSpec() {
     if (queue.length < WINDOW) refill();
     const { W, H, g } = geometry();
-    const win = eraWindow(), first = win[0], rest = win.slice(1);
+    const win = eraWindow();
+    const k = Math.max(1, Math.min(mustLead, win.length)); mustLead = 1;
+    const must = win.slice(0, k), rest = win.slice(k);   // the queue head is always on this screen
     const cands = [], loose = [];
     for (const st of STRUCTURES) {
       const n = st.reduce((a, x) => a + x, 0);
-      if (n > win.length) continue;
+      if (n > win.length || n < k) continue;
       for (let t = 0; t < 24; t++) {
-        const chosen = shuffle([first, ...shuffle(rest.slice()).slice(0, n - 1)]);
+        const chosen = shuffle([...must, ...shuffle(rest.slice()).slice(0, n - k)]);
         const rows = []; let i = 0;
         for (const c of st) { rows.push(chosen.slice(i, i + c)); i += c; }
         const L = layout(rows.map(r => r.map(p => p.ratio)), W, H, g);
@@ -207,9 +222,10 @@
 
   // QA only (?sim=N): plan N screens without rendering and report repeats and set clashes.
   function simulate(n) {
-    const lastSeen = new Map(), types = {}, perEra = {}; let shown = 0, minGap = Infinity, clashes = 0, gaps = [], minPer = Infinity, mixed = 0;
+    const lastSeen = new Map(), types = {}, perEra = {}; let shown = 0, minGap = Infinity, clashes = 0, gaps = [], minPer = Infinity, mixed = 0, first = null;
     for (let i = 0; i < n; i++) {
       const spec = makeSpec();
+      if (i === 0) first = { photos: spec.photos.length, start: spec.photos.filter(p => START_SET.test(p.set || '')).length, prefer: spec.photos.filter(p => START_SET.test(p.set || '') && START_PREFER.test(p.set || '')).length, era: [...new Set(spec.photos.map(p => p.era))].join('+'), ids: spec.photos.map(p => p.id) };
       minPer = Math.min(minPer, spec.photos.length);
       const eras = new Set(spec.photos.map(p => p.era || 'los'));
       if (eras.size > 1) mixed++;
@@ -223,7 +239,7 @@
       }
     }
     gaps.sort((a, b) => a - b);
-    const result = { screens: n, photosShown: shown, unique: lastSeen.size, of: photos.length, minGapPhotos: minGap, medianGap: gaps[Math.floor(gaps.length / 2)] || null, setClashes: clashes, minPhotosPerScreen: minPer, mixedEraScreens: mixed, screensPerEra: perEra, types };
+    const result = { screens: n, photosShown: shown, unique: lastSeen.size, of: photos.length, minGapPhotos: minGap, medianGap: gaps[Math.floor(gaps.length / 2)] || null, setClashes: clashes, minPhotosPerScreen: minPer, mixedEraScreens: mixed, screensPerEra: perEra, types, first };
     window.__sim = result; document.title = 'SIM ' + JSON.stringify(result);
     return result;
   }

@@ -97,9 +97,12 @@
 html{ -webkit-text-size-adjust:100%; text-size-adjust:100%; color-scheme:light; }
 body{
   margin:0; color:var(--ap-label);
-  /* premium = een zachte gradient, nooit een effen vlak: licht van boven, het merkroze eronder */
+  /* premium = een zachte gradient, nooit een effen vlak: een lichte gloed achter de titel, het merkroze eronder.
+     De bovenrand is exact --pink (= de achtergrondkleur en theme-color): Safari 26 kleurt de strook achter de
+     statusbalk met die kleur, dus een lichtere bovenrand gaf daar een naad (Lesters iPhone, 9/11). De gloed
+     staat daarom lager en is op de bovenrand al volledig weg (afstand 300/420 = 71% > stop 70%). */
   background:
-    radial-gradient(120% 55% at 50% 0%, var(--pink-lift) 0%, rgba(241,227,239,0) 70%),
+    radial-gradient(95% 420px at 50% 300px, var(--pink-lift) 0%, rgba(241,227,239,0) 70%),
     linear-gradient(180deg, var(--pink) 0%, var(--pink) 55%, var(--pink-deep) 100%);
   background-color:var(--pink);
   font:400 var(--ap-fs-body)/var(--ap-lh-body) var(--ap-font-sans);

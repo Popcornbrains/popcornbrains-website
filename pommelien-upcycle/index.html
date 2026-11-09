@@ -150,12 +150,14 @@ a:focus-visible{ outline:3px solid color-mix(in srgb, var(--ap-accent) 60%, tran
 /* ==========================================================================
    Hero: de signatuur, de datum, de titel, de bedanking. Gecentreerd, veel lucht.
    ========================================================================== */
-.hero{ padding:calc(72px + env(safe-area-inset-top, 0px)) 0 40px; text-align:center; }
-.sig{ width:clamp(8.5rem, 34vw, 11rem); margin:0 auto 28px; }
+/* lucht schaalt mee met de breedte: op een iPhone past het eerste scherm (hero, foto, bijschrift en de intro) boven de
+   zwevende werkbalk van Safari 26 (Lester 9/11); op desktop blijft de ruime versie */
+.hero{ padding:calc(clamp(28px, 6vw, 72px) + env(safe-area-inset-top, 0px)) 0 clamp(28px, 3.5vw, 40px); text-align:center; }
+.sig{ width:clamp(7.5rem, 30vw, 11rem); margin:0 auto clamp(16px, 2.4vw, 28px); }
 .eyebrow{ margin:0 0 10px; color:var(--ap-accent); font-weight:600; font-size:17px; line-height:1.25; letter-spacing:-.022em; }
 .title{
   margin:0; font-weight:700;
-  font-size:clamp(3rem, 13.5vw, 6rem); line-height:1.02; letter-spacing:-.035em; text-wrap:balance;
+  font-size:clamp(2.75rem, 12.5vw, 6rem); line-height:1.02; letter-spacing:-.035em; text-wrap:balance;
 }
 .sub{
   margin:18px auto 0; max-width:30ch; color:var(--ap-label-2);
@@ -176,7 +178,7 @@ a:focus-visible{ outline:3px solid color-mix(in srgb, var(--ap-accent) 60%, tran
 /* ==========================================================================
    Intro
    ========================================================================== */
-.intro{ padding:56px 0 8px; }
+.intro{ padding:clamp(28px, 5vw, 56px) 0 8px; }
 .lede{ font-size:clamp(1.1875rem, 2.6vw, 1.5rem); line-height:1.42; letter-spacing:-.02em; font-weight:500; }
 .lede strong{ font-weight:600; color:var(--ap-label); }
 .intro .lede{ color:var(--ap-label-2); }

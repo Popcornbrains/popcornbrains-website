@@ -69,6 +69,24 @@
   --ap-r-capsule:9999px;
   --ap-r-group:16px;
   --ap-r-xl:24px;
+  /* v1.4 (diepte zonder effect): een vrijstaande kaart of foto op het canvas = widgetgeometrie, en de lift is
+     een oppervlaktestap + lichtrand, nooit een slagschaduw [Apple + meting op Lesters iPhone, chassis v1.4] */
+  --ap-r-widget:27px;
+  --ap-surface-host:#FAFAFA;
+  --ap-label-2-strong:rgba(60,60,67,.75);
+  --ap-edge-light:
+    inset 0  1px 0        rgba(255,255,255,1),
+    inset 0 -1px 0        rgba(255,255,255,1),
+    inset 0  7px 5px -4px rgba(255,255,255,.70),
+    inset 0 -7px 5px -4px rgba(255,255,255,.70);
+  /* op een donker oppervlak (de foto): de donkere waarden van hetzelfde gemeten profiel */
+  --ap-edge-light-dark:
+    inset 0  1px 0        rgba(255,255,255,.22),
+    inset 0 -1px 0        rgba(255,255,255,.22),
+    inset 0  7px 5px -4px rgba(255,255,255,.06),
+    inset 0 -7px 5px -4px rgba(255,255,255,.06),
+    inset  1px 0 0        rgba(0,0,0,.09),
+    inset -1px 0 0        rgba(0,0,0,.09);
   --ap-hit-min:44px;
   --ap-bar-btn-h:36px;
   --ap-h-large:52px;
@@ -168,12 +186,15 @@ a:focus-visible{ outline:3px solid color-mix(in srgb, var(--ap-accent) 60%, tran
    De foto: de pop-up zelf, op haar eigen 3:2, nooit bijgesneden
    ========================================================================== */
 .shot{ margin:0; }
-.shot img{
-  width:100%; border-radius:var(--ap-r-group); background:#1a1414;
-  box-shadow:0 1px 2px rgba(89,17,61,.10), 0 18px 48px rgba(89,17,61,.22);
+/* het kader draagt de vorm en de lichtrand (op een overlay: inset-schaduwen tekenen onder een beeld); geen slagschaduw */
+.shot__frame{ position:relative; border-radius:var(--ap-r-widget); overflow:hidden; background:#1a1414; }
+.shot__frame::after{ content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit; box-shadow:var(--ap-edge-light-dark); }
+.shot img{ width:100%; }
+@supports (corner-shape: superellipse(1.3)){
+  /* Chromium 139+: Apple's gemeten curve (exponent ~2,5 over een 32-box); Safari tekent de cirkel van 27 */
+  .shot__frame, .shot__frame::after{ border-radius:32px; corner-shape:superellipse(1.3); }
 }
 .shot figcaption{ margin-top:12px; text-align:center; color:var(--ap-label-2); font-size:var(--ap-fs-footnote); line-height:1.38; letter-spacing:var(--ap-ls-footnote); }
-@media (min-width:734px){ .shot img{ border-radius:var(--ap-r-xl); } }
 
 /* ==========================================================================
    Intro
@@ -221,13 +242,16 @@ a:focus-visible{ outline:3px solid color-mix(in srgb, var(--ap-accent) 60%, tran
    prominente actie van de pagina.
    ========================================================================== */
 .left{ padding:24px 0 88px; }
+/* een rustende kaart: dekkend gebroken wit (de Mail-widget), lift = de stap op het canvas + de lichtrand die boven en
+   onder tot zuiver wit verzadigt; geen slagschaduw, geen rand */
 .card{
-  background:var(--paper); border-radius:var(--ap-r-xl); padding:32px 24px;
-  box-shadow:0 1px 2px rgba(89,17,61,.06), 0 12px 32px rgba(89,17,61,.10);
+  position:relative; background:var(--ap-surface-host); border-radius:var(--ap-r-widget); padding:32px 24px;
   text-align:center;
 }
+.card::after{ content:""; position:absolute; inset:0; pointer-events:none; border-radius:inherit; box-shadow:var(--ap-edge-light); }
+@supports (corner-shape: superellipse(1.3)){ .card, .card::after{ border-radius:32px; corner-shape:superellipse(1.3); } }
 .card h2{ margin:0 0 10px; font-weight:700; font-size:clamp(1.75rem, 5.4vw, 2.5rem); line-height:1.1; letter-spacing:-.03em; text-wrap:balance; }
-.card p{ color:var(--ap-label-2); max-width:34ch; margin:0 auto; }
+.card p{ color:var(--ap-label-2-strong); max-width:34ch; margin:0 auto; }
 .card p a{ color:var(--ap-label); }
 .btn{
   display:inline-flex; align-items:center; justify-content:center; gap:8px;
@@ -237,12 +261,14 @@ a:focus-visible{ outline:3px solid color-mix(in srgb, var(--ap-accent) 60%, tran
   background:linear-gradient(180deg, rgba(255,255,255,.16), transparent 55%), var(--ap-accent);
   color:var(--ap-on-accent); font:600 var(--ap-fs-body)/1 var(--ap-font-sans); letter-spacing:var(--ap-ls-body);
   text-decoration:none; cursor:pointer; -webkit-tap-highlight-color:transparent;
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 1px 2px rgba(89,17,61,.35), 0 8px 20px rgba(89,17,61,.18);
+  /* Apple's prominente knop: een binnenglans en een haarlijn schaduw, geen zweefschaduw */
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 1px 2px rgba(89,17,61,.35);
   transition:transform var(--ap-dur-snappy-short) var(--ap-ease-snappy), opacity var(--ap-dur-smooth-short) var(--ap-ease-smooth), box-shadow var(--ap-dur-smooth-short) var(--ap-ease-smooth);
 }
 .btn svg{ width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
 @media (hover:hover) and (pointer:fine){
-  .btn:hover{ transform:translateY(-1px); box-shadow:inset 0 1px 0 rgba(255,255,255,.22), 0 1px 2px rgba(89,17,61,.35), 0 12px 28px rgba(89,17,61,.26); text-decoration:none; }
+  /* muis: "more subdued" [Apple], een lichtere glans in plaats van optillen */
+  .btn:hover{ background:linear-gradient(180deg, rgba(255,255,255,.24), transparent 55%), var(--ap-accent); text-decoration:none; }
 }
 .btn:active{ transform:scale(.97); opacity:.85; }
 .btn:focus-visible{ outline:3px solid color-mix(in srgb, var(--ap-accent) 60%, transparent); outline-offset:3px; border-radius:var(--ap-r-capsule); }
@@ -276,7 +302,9 @@ a:focus-visible{ outline:3px solid color-mix(in srgb, var(--ap-accent) 60%, tran
 html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; transition:none !important; }
 
 @media (prefers-contrast:more){
-  :root{ --ap-label-2:rgba(0,0,0,.82); }
+  :root{ --ap-label-2:rgba(0,0,0,.82); --ap-label-2-strong:rgba(0,0,0,.82); }
+  /* Increase Contrast: de lichtrand wordt een rand van 1 px in de labelkleur [Apple, HIG Accessibility] */
+  .card::after, .shot__frame::after{ box-shadow:inset 0 0 0 1px var(--ap-label); }
   .bar::before{ background:var(--paper); -webkit-backdrop-filter:none; backdrop-filter:none; border-bottom:1px solid var(--ink); }
 }
 @media (prefers-reduced-transparency:reduce){
@@ -306,11 +334,11 @@ html.qa *, html.qa *::before, html.qa *::after{ animation:none !important; trans
 
 <div class="wrap">
   <figure class="shot">
-    <img src="assets/img/popup-1200.webp"
+    <div class="shot__frame"><img src="assets/img/popup-1200.webp"
          srcset="assets/img/popup-1200.webp 1200w, assets/img/popup-2400.webp 2400w"
          sizes="(min-width: 1124px) 1080px, calc(100vw - 32px)"
          width="2400" height="1601" decoding="async" fetchpriority="high"
-         alt="De upcycle pop-up in Ziggo Dome, onder het bord Noord Ring 1+2: vier bedrukte T-shirts aan een rek, de drukpersen en het team aan de balie.">
+         alt="De upcycle pop-up in Ziggo Dome, onder het bord Noord Ring 1+2: vier bedrukte T-shirts aan een rek, de drukpersen en het team aan de balie."></div>
     <figcaption>Foto: Ilias Van Bambost</figcaption>
   </figure>
 </div>
